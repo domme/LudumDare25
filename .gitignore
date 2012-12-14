@@ -1,0 +1,9 @@
+obj/*
+Temp/*
+Library/*
+ProjectSettings/*
+*.unity
+*.pidb
+*.suo
+Assets/Standard Assets*
+Assets/Editor*
