@@ -21,6 +21,7 @@ var monsterNameSpace = (function(ns)
 							 + 'else '
 							 + 'monsterNameSpace.shop.noCredits();">'
 							 + '<div class="name">'+self.items[k].name+' ('+self.items[k].level+')</div>'
+							 + '<div class="price">'+self.items[k].price+' $</div>'
 							 + '</div>'
 				}
 

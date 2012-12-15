@@ -261,6 +261,15 @@ input.btn
 	text-align 	: center;
 }
 
+.shop .item .price
+{
+	display 		: block;
+	font-weight 	: bold;
+	text-align 		: center;
+	padding 		: 5px;
+	margin-top 		: 88px;
+}
+
 .missionWindow
 {
 	z-index					: 50; 
