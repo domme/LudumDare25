@@ -4,6 +4,7 @@ var camera;
 var scene;
 var cloudScene;
 var globeMesh;
+var globeRadius = 40;
 var globeCloudMesh;
 var globeMaterial;
 var globeCloudMaterial;
@@ -11,6 +12,15 @@ var globeCityMaterial;
 var renderer;
 var sunPointlight;
 var sunPointlightCloud;
+var missionMeshes = [];
+
+
+var waterLandImageAdapter = function()
+{
+	var waterLandImage = new Image();
+	var waterLandImageData = null;	
+	var ready = false;
+}
 
 var container, stats;
 
@@ -28,6 +38,9 @@ var monsterNameSpace = (function(ns)
 
     ns.Game.prototype.start = function()
     {
+    	init();
+		animate();
+
         this.saveGame = new ns.SaveGameHandler();
         this.player = new ns.Player(this.saveGame);
         this.gui = new ns.GUI(this.player);
@@ -36,8 +49,7 @@ var monsterNameSpace = (function(ns)
         this.missionManager = new ns.MissionManager(this.saveGame);
         this.missionManager.createMission(this.player);
 
-        init();
-		animate();
+        
     };
 
     /*******************************************************************************************************************
@@ -162,6 +174,7 @@ var monsterNameSpace = (function(ns)
     {
         var mis = new ns.Mission(player);
 
+		createRandomChildMissionGraphics();        
         this.missionList.push(mis);
     };
 
@@ -429,6 +442,12 @@ function init()
 	var colorTex = THREE.ImageUtils.loadTexture( "assets/textures/earthmap1k.jpg" );
 	var normalTex = THREE.ImageUtils.loadTexture( "assets/textures/earthbump1k.jpg" );
 	var specularTex = THREE.ImageUtils.loadTexture( "assets/textures/earthspec1k.jpg" );
+	
+	waterLandImageAdapter.waterLandImage = new Image();
+	waterLandImageAdapter.waterLandImage.onload = function(){ waterLandTexLoaded();}
+	waterLandImageAdapter.waterLandImage.src = "assets/textures/earthspec1k.jpg";
+
+
 	var cloudTex = THREE.ImageUtils.loadTexture( "assets/textures/Earth-Clouds2700.jpg" );
 	cloudTex.wrapS = THREE.MirroredRepeatWrapping;
 	cloudTex.wrapT = THREE.MirroredRepeatWrapping;
@@ -490,7 +509,7 @@ function init()
 	globeMaterial.specularMap = specularTex;
 	//globeMaterial.
 
-	globeMesh = new THREE.Mesh( new THREE.SphereGeometry( 40, 100, 100 ), globeMaterial );
+	globeMesh = new THREE.Mesh( new THREE.SphereGeometry( globeRadius, 100, 100 ), globeMaterial );
 	globeMesh.position.x = 0;
 	globeMesh.position.y = 0;
 	globeMesh.position.z = 0;
@@ -522,13 +541,54 @@ function init()
 	scene.add( starMesh );
 
 	window.addEventListener( 'resize', onWindowResize, false );
+	document.addEventListener( 'mousemove', onMouseMove, false );
 	//document.addEventListener( 'keydown', onKeyDown, false );
 
 }
 
-function createRandomChildMission()
+function waterLandTexLoaded()
 {
+	var imgCanvas = document.getElementById( "myCanvas" );
+	var imgContext = imgCanvas.getContext( '2d' );
+	imgContext.drawImage( waterLandImageAdapter.waterLandImage, 0, 0 );
 
+	waterLandImageAdapter.waterLandImageData = imgContext.getImageData( 0, 0, 2000, 1000 );
+	waterLandImageAdapter.ready = true;
+	createRandomChildMissionGraphics();
+}
+
+function isOnLand( phi, theta )
+{
+	var normX = phi / ( Math.PI * 2 ) ;
+	var normY = theta / ( Math.PI );
+
+	var x = normX * 2000;
+	var y = normY * 1000;
+
+	var i = y * 2000 + x;
+	var pixelValue = waterLandImageAdapter.waterLandImageData.data[ Math.floor( i ) ]; 
+	console.log( pixelValue );
+	return pixelValue < 200;
+}
+
+function createRandomChildMissionGraphics()
+{
+	if( !waterLandImageAdapter.ready )
+		return;
+
+	do
+	{
+		var phi = Math.random() * 2 * Math.PI;
+		var theta = Math.random() * Math.PI;
+	} while( !isOnLand( phi, theta ) );
+
+	var newMissionMesh = new THREE.Mesh( new THREE.SphereGeometry( 2, 10, 10 ), new THREE.MeshBasicMaterial( { color: 0x0000ff } ) );
+	newMissionMesh.position.x = globeRadius * Math.sin( theta ) * Math.cos( phi );
+	newMissionMesh.position.y = globeRadius * Math.sin( theta ) * Math.sin( phi );
+	newMissionMesh.position.z = globeRadius * Math.cos( theta );
+
+	missionMeshes.push( newMissionMesh );
+	globeMesh.add( newMissionMesh );
 }
 
 
@@ -557,6 +617,75 @@ function update()
 {
 	globeMesh.rotation.y += 0.001;
 	cameraControls.update();
+}
+
+function intersectWithMouse(  )
+{
+	var mouseScenePos = new THREE.Vector3();
+	mouseScenePos.x = ( event.clientX / SCREEN_WIDTH ) * 2.0 - 1.0;
+	mouseScenePos.y = ( ( SCREEN_HEIGHT - event.clientY ) / SCREEN_HEIGHT ) * 2.0 - 1.0;
+	mouseScenePos.z = -1.0;
+
+	var viewProjI = new THREE.Matrix4();
+	viewProjI.identity();
+	var projI = new THREE.Matrix4();
+	var viewI = new THREE.Matrix4();
+	projI.getInverse( camera.projectionMatrix );
+	viewI.getInverse( camera.matrixWorldInverse );
+	viewProjI.multiply( viewI, projI );
+	
+	var rayNear = new THREE.Vector4();
+	
+	rayNear.x = mouseScenePos.x;
+	rayNear.y = mouseScenePos.y;
+	rayNear.z = mouseScenePos.z;
+	rayNear.w = 1.0;
+	
+	rayNear = viewProjI.multiplyVector4( rayNear );
+	rayNear.x /= rayNear.w;
+	rayNear.y /= rayNear.w;
+	rayNear.z /= rayNear.w;
+	rayNear.w = 1.0;
+	
+	var mouseRay = new THREE.Ray();		
+	mouseRay.origin.copy( camera.position );
+    
+	mouseRay.direction.x = rayNear.x - camera.position.x;
+	mouseRay.direction.y = rayNear.y - camera.position.y;
+	mouseRay.direction.z = rayNear.z - camera.position.z;
+	mouseRay.direction.normalize();
+
+	for( var i = 0; i < missionMeshes.length; ++i )
+	{
+		var intersections = mouseRay.intersectObject( missionMeshes[ i ], false );
+
+		if( intersections[ 0 ] != null )
+			return intersections[ 0 ].object;
+
+	}
+
+	return null;
+}
+
+
+function onMouseMove( event )
+{
+	var pickedMesh = intersectWithMouse();
+
+	if( pickedMesh != null )
+	{
+		console.log( "Hit!" );
+		pickedMesh.material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+		pickedMesh.dirty = true;
+		
+	}
+
+	else
+	{
+		missionMeshes[ 0 ].material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+		missionMeshes[ 0 ].dirty = true;
+	}
+		
 }
 
 
