@@ -10,7 +10,9 @@ var SCREEN_HEIGHT = window.innerHeight;
 var camera;
 var scene;
 var globeMesh;
+var globeMaterial;
 var renderer;
+var sunPointlight;
 
 var container, stats;
 
@@ -32,7 +34,25 @@ function init()
 
 	scene.camera = camera;
 
-	globeMesh = new THREE.Mesh( new THREE.SphereGeometry( 40, 100, 100 ), new THREE.MeshBasicMaterial( { color:0xff0000, wireframe: false } ) );
+
+	scene.add( new THREE.AmbientLight( 0x444444 ) );
+
+	sunPointlight = new THREE.PointLight( 0xffffff, 2.0, 1000 );
+	sunPointlight.position.x = 100;
+	sunPointlight.position.y = 100;
+	sunPointlight.position.z = 100;
+	scene.add( sunPointlight );
+
+	var colorTex = THREE.ImageUtils.loadTexture( "assets/textures/earthmap1k.jpg" );
+
+	var normalTex;
+	var specularTex;
+
+
+
+	globeMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, map: colorTex } );
+
+	globeMesh = new THREE.Mesh( new THREE.SphereGeometry( 40, 100, 100 ), globeMaterial );
 	globeMesh.position.x = 0;
 	globeMesh.position.y = 0;
 	globeMesh.position.z = 0;
