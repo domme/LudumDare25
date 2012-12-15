@@ -110,23 +110,6 @@ var monsterNameSpace = (function(ns)
         {
             this[key] = data[key];
         }
-
-        // add amount of xp to monster
-        this.addXp = function(amount)
-        {
-            this.xp += amount;
-
-            // if amount of xp are over range: level up
-            if(this.xp >= monster.getXpRange(this.level))
-            {
-                this.xp = 0;
-                this.level++;
-            }
-
-            // save in local storage and reload monster list
-            localStorage.setItem('monsters', JSON.stringify(mymonsters));
-            displayMonsters();
-        }
     };
 
     ns.Monster.prototype.addXP = function(amount)
@@ -139,9 +122,7 @@ var monsterNameSpace = (function(ns)
             this.xp = 0;
             this.level++;
         }
-
-        // save in local storage and reload monster list
-        localStorage.setItem('monsters', JSON.stringify(mymonsters));
+        game.gui.drawHUD();
     };
     ns.Monster.prototype.getXpRange = function(level)
     {
