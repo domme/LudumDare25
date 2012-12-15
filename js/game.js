@@ -316,7 +316,7 @@ function init()
 	container.appendChild( renderer.domElement );
 	renderer.autoClear = false;
 
-	camera = new THREE.PerspectiveCamera( 60, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 200 );
+	camera = new THREE.PerspectiveCamera( 60, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 1000 );
 	camera.position.z = 100;
 
 	cameraControls = new THREE.OrbitControls( camera );
@@ -396,10 +396,6 @@ function init()
 	globeMaterial.specularMap = specularTex;
 	//globeMaterial.
 
-
-	
-
-
 	globeMesh = new THREE.Mesh( new THREE.SphereGeometry( 40, 100, 100 ), globeMaterial );
 	globeMesh.position.x = 0;
 	globeMesh.position.y = 0;
@@ -408,8 +404,36 @@ function init()
 
 
 
+	//Init star-system
+	var numStars = 10000;
+	var maxStarDistance = 500;
+	var minEarthDistance = 200;
+
+	var starGeometry = new THREE.Geometry();
+
+	for( var i = 0; i < numStars; ++i )
+	{
+		var radius = Math.random() * 0.5 + 0.1; 
+
+		var currMesh = new THREE.Mesh( new THREE.SphereGeometry( radius, 1, 1 ) );
+
+		currMesh.position.x = ( Math.random() * 2 - 1 ) * maxStarDistance;
+		currMesh.position.y = ( Math.random() * 2 - 1 ) * maxStarDistance;
+		currMesh.position.z = ( Math.random() * 2 - 1 ) * maxStarDistance;
+
+		THREE.GeometryUtils.merge( starGeometry, currMesh );
+	}
+
+	var starMesh = new THREE.Mesh( starGeometry, new THREE.MeshBasicMaterial( { color: 0xffffff } ) );
+	scene.add( starMesh );
+
 	window.addEventListener( 'resize', onWindowResize, false );
 	//document.addEventListener( 'keydown', onKeyDown, false );
+
+}
+
+function createRandomChildMission()
+{
 
 }
 
