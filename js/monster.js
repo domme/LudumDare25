@@ -1,5 +1,5 @@
 // Monster class
-monster = function(data)
+var monster = function(data)
 {
 
 	// default values
@@ -33,12 +33,11 @@ monster = function(data)
 		localStorage.setItem('monsters', JSON.stringify(mymonsters));
 		displayMonsters();
 	}
-
-}
+};
 
 
 // general function to determine xp-range for next level
 monster.prototype.getXpRange = function(level)
 {
 	return(Math.round(22 * (level)/3));
-}
+};

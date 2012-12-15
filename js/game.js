@@ -14,20 +14,159 @@ var sunPointlightCloud;
 
 var container, stats;
 
+var monsterNameSpace = (function(ns)
+{
+    ns.Game = function(title)
+    {
+        this.title = title;
+        this.saveGame = null;
+        this.gui = null;
+    };
 
-var myMonsters = new monsterManager();
+    ns.Game.prototype.start = function()
+    {
+        this.saveGame = new ns.SaveGameHandler();
+        this.player = new ns.Player(this.saveGame);
 
+        this.gui = new ns.GUI(this.player);
+        this.gui.drawHUD();
+    };
+
+    /*******************************************************************************************************************
+     * PLAYER
+     ******************************************************************************************************************/
+    ns.Player = function(saveGameHandler)
+    {
+        this.saveGame = saveGameHandler;
+        this.cash = this.saveGame.get('cash', 0);
+
+        this.monsterManager = new ns.MonsterManager(this.saveGame.get('monsters',[]));
+    };
+    /*******************************************************************************************************************
+     * PLAYER
+     ******************************************************************************************************************/
+    ns.GUI = function(player)
+    {
+        this.player = player;
+
+        this.player.watch('cash', function(id, oldVal, newVal)
+        {
+            $('#cash').text(newVal+' $');
+            return newVal;
+        });
+    };
+
+    ns.GUI.prototype.drawHUD = function()
+    {
+        $('#cash').text(this.player.cash+' $');
+
+        var list = $('#sidebar #monsters');
+        list.html('');
+
+        for(var i = 0, monster = null; monster = this.player.monsterManager.monsterList[i]; ++i)
+        {
+            list.append('<div id="'+i+'" class="item '+monster.type+'">'
+                +'<span class="name">'
+                +monster.name+' ('+monster.level+')'
+                +'</span>'
+                +'<span class="xp">'
+                +monster.xp+' / '+ns.Monster.prototype.getXpRange(monster.level)
+                +'</span>'
+                +'</div>');
+        }
+        $("#sidebar #monsters .item").draggable({
+            revert	: true,
+            scroll	: false,
+            snap 	: true
+        });
+    };
+    /*******************************************************************************************************************
+     * MONSTER
+     ******************************************************************************************************************/
+    ns.Monster = function(data)
+    {
+        // default values
+        this.defaults 	= {
+
+            name		: '',
+            type		: '',
+            xp 			: 0,
+            level 		: 3,
+            daily_fee 	: 1000
+
+        };
+
+        // merger parameters with default values
+        data = $.extend(this.defaults, data);
+
+        for(var key in data)
+        {
+            this[key] = data[key];
+        }
+
+        // add amount of xp to monster
+        this.addXp = function(amount)
+        {
+            this.xp += amount;
+
+            // if amount of xp are over range: level up
+            if(this.xp >= monster.getXpRange(this.level))
+            {
+                this.xp = 0;
+                this.level++;
+            }
+
+            // save in local storage and reload monster list
+            localStorage.setItem('monsters', JSON.stringify(mymonsters));
+            displayMonsters();
+        }
+    };
+
+    ns.Monster.prototype.addXP = function(amount)
+    {
+        this.xp += amount;
+
+        // if amount of xp are over range: level up
+        if(this.xp >= monster.getXpRange(this.level))
+        {
+            this.xp = 0;
+            this.level++;
+        }
+
+        // save in local storage and reload monster list
+        localStorage.setItem('monsters', JSON.stringify(mymonsters));
+    };
+    ns.Monster.prototype.getXpRange = function(level)
+    {
+        return(Math.round(22 * (level)/3));
+    };
+    /*******************************************************************************************************************
+     * Monster Manager
+     ******************************************************************************************************************/
+    ns.MonsterManager = function(monsterList)
+    {
+        this.monsterList = monsterList;
+        for(var i = 0, monster = null; monster = this.monsterList[i]; ++i)
+        {
+            monster.prototype = ns.Monster;
+        }
+    };
+
+    ns.MonsterManager.prototype.addMonster = function(monster)
+    {
+        this.monsterList.push(monster);
+        game.gui.drawHUD();
+        return this.monsterList.length-1;
+    };
+
+    return ns;
+})(monsterNameSpace);
+
+var game = null;
 $(document).ready(function(){
-
-	// display cash
-	$('#cash').html(localStorage.getItem('cash')+' $');
-
-	myMonsters.renderList();
-
-		init();
-	animate();
+	game = new monsterNameSpace.Game('Scare Factory');
+    game.start();
 });
-
 
 // monster dies because it didn't manage to scare a fucking child...
 function monsterDeath(id)
