@@ -13,45 +13,20 @@ var sunPointlight;
 var sunPointlightCloud;
 
 var container, stats;
-var mymonsters = null;
+
+
+var myMonsters = new monsterManager();
 
 $(document).ready(function(){
-
-	// get monsters from local storage
-	mymonsters = JSON.parse(localStorage.getItem('monsters'));
 
 	// display cash
 	$('#cash').html(localStorage.getItem('cash')+' $');
 
-	displayMonsters();
+	myMonsters.renderList();
 
 		init();
 	animate();
 });
-
-
-function getXpRange(level)
-{
-	return(Math.round(22 * ((level)/3)));
-}
-
-// give an amount of experience points to a monster
-function giveXp(id, amount)
-{
-	mymonsters[id].xp += amount;
-
-	// on level up give again 0 XP to monster to go through process again (in case of more than 1 level up at once)
-	if(mymonsters[id].xp >= getXpRange(mymonsters[id].level))
-	{
-		mymonsters[id].xp -= getXpRange(mymonsters[id].level);
-		mymonsters[id].level++;
-		giveXp(id, 0);
-	}
-
-	// save in local storage and reload monster list
-	localStorage.setItem('monsters', JSON.stringify(mymonsters));
-	displayMonsters();
-}
 
 
 // monster dies because it didn't manage to scare a fucking child...
@@ -137,104 +112,6 @@ function multipleMonsterDeath(list)
 		mymonsters.splice(list[i], 1);
 		localStorage.setItem('monsters', JSON.stringify(mymonsters));
 	}
-}
-
-
- // generate monster list in sidebar
-function displayMonsters()
-{
-	// clear list of monsters before redrawing them
-	$('#sidebar #monsters').html('');
-
-	// START display all monsters in sidebar
-	if(mymonsters[0] != null)
-		for(i = 0; i < mymonsters.length; i++)
-		{
-			$('#sidebar #monsters').append('<div id="'+i+'" class="item '+mymonsters[i].type+'">'
-										  +'<span class="name">'
-										  +mymonsters[i].name+' ('+mymonsters[i].level+')'
-										  +'</span>'
-										  +'<span class="xp">'
-										  +mymonsters[i].xp+' / '+getXpRange(mymonsters[i].level)
-										  +'</span>'
-										  +'</div>');
-
-			// on last step of loop make list items dragable
-			if(i+1 == mymonsters.length)
-			{
-				$("#sidebar #monsters .item").draggable({
-					revert	: true,
-					scroll	: false,
-					snap 	: true
-				});
-
-				make_droppable();
-			}
-		}
-	// END display all monsters in sidebar
-}
-
-
-// make droppable elements
-function make_droppable()
-{
-	$(".toscare").droppable({
-		drop	: function(e, ui) {
-
-			// START calculate timeout of monster, XP to gain and scare-credits player will get
-			var monster_id 			= ui.draggable.attr('id');
-			var toscare_level 		= $(this).attr('data-level');
-			var toscare_type 		= $(this).attr('data-type');
-			var monster_level 		= mymonsters[monster_id].level;
-
-			// Monster is same type? Great! Bonus
-			if(mymonsters[monster_id].type == toscare_type)
-				monster_level += 2;
-
-			// Child is on night-side? Yeah! Another bonus...
-			// if(mymonsters[monster_id].type == toscare_type)
-			// 	monster_level += 1;
-
-			var chance = 60 + (monster_level - toscare_level) * 20;
-			if(Math.round(1+Math.random()*100) < chance)
-			{
-				var cashFlow = Math.abs((monster_level - toscare_level)) * 1000;
-				if(mymonsters[monster_id].type == toscare_type)
-					cashFlow *= 2;
-
-				// get me some cash!
-				localStorage.setItem('cash', parseInt(localStorage.getItem('cash')) + cashFlow);
-				$('#cash').html(localStorage.getItem('cash')+' $');
-
-				// get XP
-				var xp = 11 * (monster_level / 3) - monster_level - toscare_level;
-				giveXp(monster_id, Math.round(xp));
-
-				// set timout for monster usability
-				timeout = toscare_level * 5000;
-
-				// disable monster and show blinking (timeout)
-				$('.item#'+monster_id).draggable('disable');
-				mymonsters[monster_id].interval = window.setInterval(function(){
-					$('.item#'+monster_id).fadeOut(500).fadeIn(500);
-				}, 1000);
-
-				// end timeout for monster after [timeout] milliseconds
-				window.setTimeout(function(){
-					// make item draggable again
-					$('.item#'+monster_id).draggable('enable');
-					window.clearInterval(mymonsters[monster_id].interval);
-				}, timeout);
-			}
-			else
-			{
-				monsterDeath(monster_id);
-			}
-
-			
-			// END calculate timeout of monster, XP to gain and scare-credits player will get
-		}
-	});
 }
 
 

@@ -211,3 +211,17 @@ input.btn
 	margin 			: 0px;
 	margin-bottom 	: 10px;
 }
+
+.missionWindow
+{
+	z-index					: 50; 
+	position				: absolute; 
+	left					: 200px; 
+	top						: 200px; 
+	width					: 200px; 
+	height					: 100px; 
+	background				: rgba(190, 0, 0, 0.3); 
+	border					: 2px solid #AA0000; 
+	border-radius			: 5px; 
+	-webkit-border-radius	: 5px;	
+}
