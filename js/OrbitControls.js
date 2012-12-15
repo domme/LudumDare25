@@ -230,19 +230,20 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		event.preventDefault();
 
-		if ( event.button === 0 || event.button === 2 ) {
+		if ( event.button === 1 || event.button === 2 ) {
 
 			state = STATE.ROTATE;
 
 			rotateStart.set( event.clientX, event.clientY );
 
-		} else if ( event.button === 1 ) {
+		} 
+		// else if ( event.button === 1 ) {
 
-			state = STATE.ZOOM;
+		// 	state = STATE.ZOOM;
 
-			zoomStart.set( event.clientX, event.clientY );
+		// 	zoomStart.set( event.clientX, event.clientY );
 
-		}
+		// }
 
 		document.addEventListener( 'mousemove', onMouseMove, false );
 		document.addEventListener( 'mouseup', onMouseUp, false );
