@@ -296,24 +296,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	}
 
-	function onMouseWheel( event ) {
-
-		if ( ! scope.userZoom ) return;
-
-		if ( event.wheelDelta > 0 ) {
-
-			scope.zoomOut();
-
-		} else {
-
-			scope.zoomIn();
-
-		}
-
-	}
-
 	this.domElement.addEventListener( 'contextmenu', function ( event ) { event.preventDefault(); }, false );
 	this.domElement.addEventListener( 'mousedown', onMouseDown, false );
-	this.domElement.addEventListener( 'mousewheel', onMouseWheel, false );
 
 };
