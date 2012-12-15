@@ -96,11 +96,10 @@ input.btn
 	right 			: 0px;
 	top 			: 0px;
 	height 			: 100%;
-	width 			: 140px;
+	width 			: 155px;
 	background 		: rgba(255, 255, 255, 0.15);
 	border-left 	: 4px solid #666;
 	z-index 		: 99;
-
 }
 
 #sidebar h1
@@ -111,32 +110,43 @@ input.btn
 	text-align 			: center;
 	-webkit-box-shadow	: 5px 3px 5px 0px rgba(0, 0, 0, 1);
 	box-shadow			: 5px 3px 5px 0px rgba(0, 0, 0, 1);
-	position			: relative;
+	position			: absolute;
+	right				: 0px;
+	top					: 0px;
+	width				: 140px;
 	z-index 			: 100;
+	background			: #222;
 }
 
 #sidebar .shop
 {
-	font-size			: 16px;
 	color 				: #00AA00;
+	font-size			: 16px;
 	margin 				: 0px;
 	padding 			: 10px;
-	width 				: 120px;
 	text-align 			: center;
-	-webkit-box-shadow	: 5px 3px 5px 5px rgba(0, 0, 0, 1);
-	box-shadow			: 5px 3px 5px 5px rgba(0, 0, 0, 1);
+	-webkit-box-shadow	: 5px 3px 5px 0px rgba(0, 0, 0, 1);
+	box-shadow			: 5px 3px 5px 0px rgba(0, 0, 0, 1);
 	position			: absolute;
-	bottom 				: 0px;
+	right				: 0px;
+	bottom				: 0px;
+	width				: 140px;
 	z-index 			: 100;
 	cursor 				: pointer;
-	background: #7d7e7d;
-	background: -moz-linear-gradient(top,  #7d7e7d 0%, #0e0e0e 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7d7e7d), color-stop(100%,#0e0e0e));
-	background: -webkit-linear-gradient(top,  #7d7e7d 0%,#0e0e0e 100%);
-	background: -o-linear-gradient(top,  #7d7e7d 0%,#0e0e0e 100%);
-	background: -ms-linear-gradient(top,  #7d7e7d 0%,#0e0e0e 100%);
-	background: linear-gradient(to bottom,  #7d7e7d 0%,#0e0e0e 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7d7e7d', endColorstr='#0e0e0e',GradientType=0 );
+	background			: #7d7e7d;
+	background			: -moz-linear-gradient(top,  #7d7e7d 0%, #0e0e0e 100%);
+	background			: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7d7e7d), color-stop(100%,#0e0e0e));
+	background			: -webkit-linear-gradient(top,  #7d7e7d 0%,#0e0e0e 100%);
+	background			: -o-linear-gradient(top,  #7d7e7d 0%,#0e0e0e 100%);
+	background			: -ms-linear-gradient(top,  #7d7e7d 0%,#0e0e0e 100%);
+	background			: linear-gradient(to bottom,  #7d7e7d 0%,#0e0e0e 100%);
+	filter				: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7d7e7d', endColorstr='#0e0e0e',GradientType=0 );
+}
+
+#sidebar #monsters
+{
+	padding 	: 40px 0px;
+	overflow-y	: scroll;
 }
 
 #sidebar .item
@@ -144,7 +154,7 @@ input.btn
 	height 			: 140px;
 	width 			: 140px;
 	background 		: rgba(255, 255, 255, 0.15);
-	margin-bottom 	: 1px;
+	margin-bottom 	: 2px;
 	cursor 			: pointer;
 
 }
@@ -175,10 +185,10 @@ input.btn
 #sidebar .item .xp
 {
 	width 			: 130px;
+	display			: inline-block;
 	text-align 		: center;
 	padding 		: 5px;
-	position 		: absolute;
-	bottom 			: 5px;
+	margin-top 		: 90px;
 }
 
 .dialogue
@@ -206,7 +216,7 @@ input.btn
 
 .shop
 {
-	width 				: 440px;
+	width 				: 450px;
 	font-weight 		: bold;
 	background-color 	: #222;
 	color 				: #FFF;
@@ -219,6 +229,36 @@ input.btn
 {
 	margin 			: 0px;
 	margin-bottom 	: 10px;
+}
+
+.shop .item
+{
+	width		: 140px;
+	height		: 140px;
+	background 	: #333;
+	cursor 		: pointer;
+	display 	: inline-block;
+	margin 		: 5px;
+}
+
+.shop .item.water
+{
+	background 		: rgba(0, 0, 255, 0.6);
+}
+
+.shop .item.fire
+{
+	background 		: rgba(255, 0, 0, 0.6);
+}
+
+.shop .item.earth
+{
+	background 		: rgba(0, 255, 0, 0.6);
+}
+
+.shop .item .name
+{
+	text-align 	: center;
 }
 
 .missionWindow
