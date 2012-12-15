@@ -12419,7 +12419,7 @@ THREE.CanvasRenderer = function ( parameters ) {
 
 			drawTriangle( _v1x, _v1y, _v2x, _v2y, _v3x, _v3y );
 
-			if ( ( material instanceof THREE.MeshLambertMaterial || material instanceof THREE.MeshPhongMaterial ) && material.map === null && material.map === null ) {
+			if ( ( material instanceof THREE.MeshLambertMaterial || material instanceof THREE.MeshPhongMaterial || material instanceof THREE.ShaderMaterial ) && material.map === null && material.map === null ) {
 
 				_diffuseColor.copy( material.color );
 				_emissiveColor.copy( material.emissive );
@@ -12490,7 +12490,7 @@ THREE.CanvasRenderer = function ( parameters ) {
 
 				}
 
-			} else if ( material instanceof THREE.MeshBasicMaterial || material instanceof THREE.MeshLambertMaterial || material instanceof THREE.MeshPhongMaterial ) {
+			} else if ( material instanceof THREE.MeshBasicMaterial || material instanceof THREE.MeshLambertMaterial || material instanceof THREE.MeshPhongMaterial || material instanceof THREE.ShaderMaterial ) {
 
 				if ( material.map !== null ) {
 
@@ -12604,7 +12604,7 @@ THREE.CanvasRenderer = function ( parameters ) {
 			_v5x = v5.positionScreen.x; _v5y = v5.positionScreen.y;
 			_v6x = v6.positionScreen.x; _v6y = v6.positionScreen.y;
 
-			if ( material instanceof THREE.MeshLambertMaterial || material instanceof THREE.MeshPhongMaterial ) {
+			if ( material instanceof THREE.MeshLambertMaterial || material instanceof THREE.MeshPhongMaterial || material instanceof THREE.ShaderMaterial  ) {
 
 				_diffuseColor.copy( material.color );
 				_emissiveColor.copy( material.emissive );
@@ -20282,7 +20282,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 			shaderID = 'lambert';
 
-		} else if ( material instanceof THREE.MeshPhongMaterial ) {
+		} else if ( material instanceof THREE.MeshPhongMaterial || material instanceof THREE.ShaderMaterial  ) {
 
 			shaderID = 'phong';
 
@@ -20545,6 +20545,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 			if ( material instanceof THREE.MeshPhongMaterial ||
 				 material instanceof THREE.MeshLambertMaterial ||
+				 material instanceof THREE.ShaderMaterial ||
 				 material.lights ) {
 
 				if ( _lightsNeedUpdate ) {
@@ -20560,7 +20561,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 			if ( material instanceof THREE.MeshBasicMaterial ||
 				 material instanceof THREE.MeshLambertMaterial ||
-				 material instanceof THREE.MeshPhongMaterial ) {
+				 material instanceof THREE.MeshPhongMaterial || material instanceof THREE.ShaderMaterial  ) {
 
 				refreshUniformsCommon( m_uniforms, material );
 
@@ -20581,7 +20582,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 				refreshUniformsParticle( m_uniforms, material );
 
-			} else if ( material instanceof THREE.MeshPhongMaterial ) {
+			} else if ( material instanceof THREE.MeshPhongMaterial || material instanceof THREE.ShaderMaterial  ) {
 
 				refreshUniformsPhong( m_uniforms, material );
 
