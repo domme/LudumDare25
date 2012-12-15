@@ -30,6 +30,9 @@ var monsterNameSpace = (function(ns)
 
         this.gui = new ns.GUI(this.player);
         this.gui.drawHUD();
+
+        init();
+		animate();
     };
 
     /*******************************************************************************************************************
@@ -312,8 +315,9 @@ function init()
 	container = document.createElement( 'div' );
 	document.body.appendChild( container );
 
+	lastTime = Date.now();
+
 	scene = new THREE.Scene();
-	cloudScene = new THREE.Scene();
 
 	renderer = new THREE.WebGLRenderer( { antialias: true, clearColor: 0x000000, clearAlpha: 1 } );
 	renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
@@ -324,36 +328,86 @@ function init()
 	camera = new THREE.PerspectiveCamera( 60, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 200 );
 	camera.position.z = 100;
 
+	cameraControls = new THREE.OrbitControls( camera );
+	cameraControls.addEventListener( 'change', render );
+
 	scene.camera = camera;
-	cloudScene.camera = camera;
-
-
-	scene.add( new THREE.AmbientLight( 0x111111 ) );
-	cloudScene.add( new THREE.AmbientLight( 0x111111 ) );
-
-	sunPointlight = new THREE.PointLight( 0xffffff, 2.0, 1000 );
+	
+	//scene.add( new THREE.AmbientLight( 0x111111 ) );
+	
+	sunPointlight = new THREE.PointLight( 0xffffff, 1.0, 1000 );
 	sunPointlight.position.x = 100;
 	sunPointlight.position.y = 100;
 	sunPointlight.position.z = 100;
 	scene.add( sunPointlight );
 
-
-	sunPointlightCloud = new THREE.PointLight( 0xffffff, 2.0, 1000 );
-	sunPointlightCloud.position.x = 100;
-	sunPointlightCloud.position.y = 100;
-	sunPointlightCloud.position.z = 100;
-	cloudScene.add( sunPointlightCloud );
-
 	var colorTex = THREE.ImageUtils.loadTexture( "assets/textures/earthmap1k.jpg" );
 	var normalTex = THREE.ImageUtils.loadTexture( "assets/textures/earthbump1k.jpg" );
 	var specularTex = THREE.ImageUtils.loadTexture( "assets/textures/earthspec1k.jpg" );
 	var cloudTex = THREE.ImageUtils.loadTexture( "assets/textures/Earth-Clouds2700.jpg" );
+	cloudTex.wrapS = THREE.MirroredRepeatWrapping;
+	cloudTex.wrapT = THREE.MirroredRepeatWrapping;
+	cloudTex.needsUpdate = true;
+
 	var cityTex = THREE.ImageUtils.loadTexture( "assets/textures/earthlights1k.jpg" );
 
-	globeMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, map: colorTex, normalMap: normalTex, normalScale: new THREE.Vector2( 0.2, 0.2 ), specularMap: specularTex, transparent: true } );
-	globeCloudMaterial = new THREE.MeshLambertMaterial( { map: cloudTex, transparent: true, blending: THREE.AdditiveBlending } );
-	globeCityMaterial = new THREE.MeshLambertMaterial( { map: cityTex, transparent: true, blending: THREE.AdditiveBlending } );
 	
+	var earthShader = MonsterShaderLib[ "earth" ];
+	earthShaderUniforms = THREE.UniformsUtils.clone( earthShader.uniforms );
+
+	earthShaderUniforms[ "cloudTexture" ].value = cloudTex;
+	earthShaderUniforms[ "nightTexture" ].value = cityTex;
+	earthShaderUniforms[ "map" ].value = colorTex;
+
+	globeMaterial = new THREE.ShaderMaterial( {
+		uniforms: earthShaderUniforms,
+		vertexShader: earthShader.vertexShader,
+		fragmentShader: earthShader.fragmentShader,
+		normalMap: normalTex,
+		normalScale: new THREE.Vector2( 0.2, 0.2 ),
+		specularMap: specularTex,
+		map: colorTex
+	});
+
+	globeMaterial.color = new THREE.Color( 0xffffff ); // diffuse
+	globeMaterial.ambient = new THREE.Color( 0xffffff );
+	globeMaterial.emissive = new THREE.Color( 0x000000 );
+	globeMaterial.specular = new THREE.Color( 0x111111 );
+	globeMaterial.shininess = 30;
+	globeMaterial.metal = false;
+	globeMaterial.perPixel = true;
+	globeMaterial.wrapAround = false;
+	globeMaterial.wrapRGB = new THREE.Vector3( 1, 1, 1 );
+	globeMaterial.map = null;
+	globeMaterial.lightMap = null;
+	globeMaterial.bumpMap = null;
+	globeMaterial.bumpScale = 1;
+	globeMaterial.normalMap = null;
+	globeMaterial.normalScale = new THREE.Vector2( 1, 1 );
+	globeMaterial.specularMap = null;
+	globeMaterial.envMap = null;
+	globeMaterial.combine = THREE.MultiplyOperation;
+	globeMaterial.reflectivity = 1;
+	globeMaterial.refractionRatio = 0.98;
+	globeMaterial.fog = true;
+	globeMaterial.shading = THREE.SmoothShading;
+	globeMaterial.wireframe = false;
+	globeMaterial.wireframeLinewidth = 1;
+	globeMaterial.wireframeLinecap = 'round';
+	globeMaterial.wireframeLinejoin = 'round';
+	globeMaterial.vertexColors = THREE.NoColors;
+	globeMaterial.skinning = false;
+	globeMaterial.morphTargets = false;
+	globeMaterial.morphNormals = false;
+	globeMaterial.map = colorTex;
+	globeMaterial.normalMap = normalTex;
+	globeMaterial.normalScale = new THREE.Vector2( 0.2, 0.2 );
+	globeMaterial.specularMap = specularTex;
+	//globeMaterial.
+
+
+	
+
 
 	globeMesh = new THREE.Mesh( new THREE.SphereGeometry( 40, 100, 100 ), globeMaterial );
 	globeMesh.position.x = 0;
@@ -361,14 +415,7 @@ function init()
 	globeMesh.position.z = 0;
 	scene.add( globeMesh );
 
-	globeCloudMesh = new THREE.Mesh( new THREE.SphereGeometry( 40, 100, 100 ), globeCloudMaterial );
-	globeCloudMesh.position.x = 0;
-	globeCloudMesh.position.y = 0;
-	globeCloudMesh.position.z = 0;
-	globeCloudMesh.scale.x = 1.001;
-	globeCloudMesh.scale.y = 1.001;
-	globeCloudMesh.scale.z = 1.001;
-	cloudScene.add( globeCloudMesh );
+
 
 	window.addEventListener( 'resize', onWindowResize, false );
 	//document.addEventListener( 'keydown', onKeyDown, false );
@@ -400,23 +447,28 @@ function animate()
 function update()
 {
 	globeMesh.rotation.y += 0.001;
-	globeCloudMesh.rotation.y += 0.0015;
+	cameraControls.update();
 }
 
 
 function render() 
 {
-	var r = Date.now() * 0.0005;
+	var currTime = Date.now();
+	var deltaTime = ( currTime - lastTime ) * 0.0002;
+	//lastTime = currTime;
+	//console.log( deltaTime );
+
+	//earthShaderUniforms[ "time" ].value = deltaTime;
+
+
+	//if( earthShaderUniforms[ "time" ].value > 1.0 )
+	//	earthShaderUniforms[ "time" ].value = 0.0;
+	
+	//globeMaterial.dirty = true;
 
 	renderer.setViewport( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 	renderer.clear();
 
-	globeMesh.material = globeMaterial;
 	renderer.render( scene, camera );
-
-	globeMesh.material = globeCityMaterial;
-	renderer.render( scene, camera );
-
-	renderer.render( cloudScene, camera );
 
 }
