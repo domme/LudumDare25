@@ -40,6 +40,8 @@ var monsterNameSpace = (function(ns)
 		animate();
     };
 
+    ns.shop = new ns.shopManager();
+
     /*******************************************************************************************************************
      * PLAYER
      ******************************************************************************************************************/
@@ -51,7 +53,7 @@ var monsterNameSpace = (function(ns)
         this.monsterManager = new ns.MonsterManager(this.saveGame.get('monsters',[]));
     };
     /*******************************************************************************************************************
-     * PLAYER
+     * GUI
      ******************************************************************************************************************/
     ns.GUI = function(player)
     {
@@ -62,7 +64,7 @@ var monsterNameSpace = (function(ns)
             $('#cash').text(newVal+' $');
             return newVal;
         });
-    };
+    };    
 
     ns.GUI.prototype.drawHUD = function()
     {
@@ -85,11 +87,13 @@ var monsterNameSpace = (function(ns)
         $("#sidebar #monsters .item").draggable({
             revert	: true,
             scroll	: false,
+            helper  : "clone",
             start	: function( event, ui ) {
 				soundManager.play('o1');
             }
         });
     };
+
     /*******************************************************************************************************************
      * MONSTER
      ******************************************************************************************************************/
@@ -248,6 +252,7 @@ var game = null;
 $(document).ready(function(){
 	game = new monsterNameSpace.Game('Scare Factory');
     game.start();
+    $('#sidebar #monsters').height($(window).height()-120);
 });
 
 // monster dies because it didn't manage to scare a fucking child...
@@ -373,28 +378,6 @@ function payDailyFee()
 	$('#cash').html(localStorage.getItem('cash')+' $');
 }
 
-
-// open dialogue to buy new monsters
-function openShop()
-{
-		var content 	= '<div class="shop">'
-						+ '<h2>Shop</h2>'
-						+ '</div>'
-
-		$.fancybox({
-			content 	: content,
-			margin 		: 0,
-			padding 	: 0
-		});		
-}
-
-// START play ambient loop
-
-
-
-// END play ambient loop
-
-
 function init()
 {
 	container = document.createElement( 'div' );
@@ -511,13 +494,15 @@ function init()
 
 function onWindowResize( event ) 
 {
-	SCREEN_WIDTH = window.innerWidth;
-	SCREEN_HEIGHT = window.innerHeight;
+	SCREEN_WIDTH = $(document).width()-143;
+	SCREEN_HEIGHT = $(document).height();
 
 	renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
 
 	camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
 	camera.updateProjectionMatrix();
+
+	$('#sidebar #monsters').height($(window).height()-120);
 }
 
 
