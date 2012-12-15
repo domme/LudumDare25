@@ -13,6 +13,9 @@
 		<!-- own CSS -->
 		<link href="css/styles.css" rel="stylesheet">
 
+		<!-- own JS -->
+		<script src="js/monster.js" type="text/javascript"></script>
+		<script src="js/monstermanager.js" type="text/javascript"></script>
 	</head>
 
 	<body>
@@ -37,7 +40,7 @@
 			<script>
 
 				// start game automatically
-				if(localStorage.getItem('monster_corp') && localStorage.getItem('monsters'))
+				if(localStorage.getItem('monster_corp') && localStorage.getItem('monsters') && localStorage.getItem('monsters')[0])
 				{
 					// window.location.href = 'game.htm';
 				}
@@ -49,31 +52,42 @@
 
 					if(start_monster == 1)
 						monsters.push({
-							name	: 'mmmone',
-							type	: 'water',
-							xp 		: 0,
-							level 	: 1
+							name		: 'mmmone',
+							type		: 'water',
+							xp 			: 0,
+							level 		: 3,
+							daily_fee	: 1000
 						});
 
 					if(start_monster == 2)
 						monsters.push({
-							name	: 'aaaatwo',
-							type	: 'fire',
-							xp 		: 0,
-							level 	: 1
+							name		: 'aaaatwo',
+							type		: 'fire',
+							xp 			: 0,
+							level 		: 3,
+							daily_fee	: 1000
 						});
 
 					if(start_monster == 3)
 						monsters.push({
-							name	: 'chuuuthree',
-							type	: 'earth',
-							xp 		: 0,
-							level 	: 1
+							name		: 'chuuuthree',
+							type		: 'earth',
+							xp 			: 0,
+							level 		: 3,
+							daily_fee	: 1000
+						});
+
+					monsters.push({
+							name		: 'bääärgh',
+							type		: 'water',
+							xp 			: 0,
+							level 		: 3,
+							daily_fee	: 9100
 						});
 
 					localStorage.setItem('monsters', JSON.stringify(monsters));
 					localStorage.setItem('monster_corp', $('#nickname').val());
-					localStorage.setItem('cash', 1000);
+					localStorage.setItem('cash', 10000);
 					window.location.href = 'game.htm';
 				}
 
