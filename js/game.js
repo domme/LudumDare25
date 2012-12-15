@@ -14,6 +14,9 @@ var sunPointlightCloud;
 
 var container, stats;
 
+var soundManager = new soundManager();
+soundManager.playAmbiente('a1');
+
 var monsterNameSpace = (function(ns)
 {
     ns.Game = function(title)
@@ -27,7 +30,6 @@ var monsterNameSpace = (function(ns)
     {
         this.saveGame = new ns.SaveGameHandler();
         this.player = new ns.Player(this.saveGame);
-
         this.gui = new ns.GUI(this.player);
         this.gui.drawHUD();
 
@@ -80,7 +82,9 @@ var monsterNameSpace = (function(ns)
         $("#sidebar #monsters .item").draggable({
             revert	: true,
             scroll	: false,
-            snap 	: true
+            start	: function( event, ui ) {
+				soundManager.play('o1');
+            }
         });
     };
     /*******************************************************************************************************************
@@ -308,6 +312,12 @@ function openShop()
 			padding 	: 0
 		});		
 }
+
+// START play ambient loop
+
+
+
+// END play ambient loop
 
 
 function init()

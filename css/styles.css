@@ -17,6 +17,15 @@ body
 }
 
 
+img#logo
+{
+	position	: absolute;
+	left		: 50%;
+	margin-left	: -319px;
+	top			: 140px;
+}
+
+
 /**
  *	Loginform
  */
@@ -30,7 +39,7 @@ body
 	left 		: 50%;
 	top 		: 50%;
 	margin-left : -270px;
-	margin-top 	: -83px;
+	margin-top 	: -23px;
 	text-align	: center;
 	border-top 	: 4px solid #666;
 }
