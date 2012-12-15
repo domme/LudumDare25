@@ -33,6 +33,9 @@ var monsterNameSpace = (function(ns)
         this.gui = new ns.GUI(this.player);
         this.gui.drawHUD();
 
+        this.missionManager = new ns.MissionManager(this.saveGame);
+        this.missionManager.createMission(this.player);
+
         init();
 		animate();
     };
@@ -145,6 +148,97 @@ var monsterNameSpace = (function(ns)
         this.monsterList.push(monster);
         game.gui.drawHUD();
         return this.monsterList.length-1;
+    };
+    /*******************************************************************************************************************
+     * MISSION MANAGER
+     ******************************************************************************************************************/
+    ns.MissionManager = function(saveGameHandler)
+    {
+        this.missionList = [];
+        this.saveGame = saveGameHandler;
+    };
+
+    ns.MissionManager.prototype.createMission = function(player)
+    {
+        var mis = new ns.Mission(player);
+
+        this.missionList.push(mis);
+    };
+
+    /*******************************************************************************************************************
+     * MISSION
+     ******************************************************************************************************************/
+    ns.Mission = function(player)
+    {
+        this.player = player;
+
+        this.children = {name:'Domi Lazarek', age:4, gender: 0, random: 1, location:{}};
+    };
+
+    ns.Mission.prototype.draw = function()
+    {
+        missionWindow = '<div class="missionWindow" data-type="'+this.children.random+'" data-level="'+this.children.age+'"></div>';
+    };
+
+    ns.Mission.prototype.makeDroppable = function()
+    {
+        $(".missionWindow").droppable({
+            drop	: function(e, ui) {
+
+                // START calculate timeout of monster, XP to gain and scare-credits player will get
+                var monster_id 			= ui.draggable.attr('id');
+                var toscare_level 		= $(this).attr('data-level');
+                var toscare_type 		= $(this).attr('data-type');
+                var monster = game.player.monsterManager.monsterList[monster_id];
+                var monster_level 		= monster.level;
+
+                // Monster is same type? Great! Bonus
+                if(monster.type == toscare_type)
+                    monster_level += 2;
+
+                // Child is on night-side? Yeah! Another bonus...
+                // if(mymonsters[monster_id].type == toscare_type)
+                // 	monster_level += 1;
+
+                var chance = 60 + (monster_level - toscare_level) * 20;
+                if(Math.round(1+Math.random()*100) < chance)
+                {
+                    var cashFlow = Math.abs((monster_level - toscare_level)) * 1000;
+                    if(monster.type == toscare_type)
+                        cashFlow *= 2;
+
+                    // get me some cash!
+                    game.player.cash += cashFlow;
+
+                    // get XP
+                    var xp = 11 * (monster_level / 3) - monster_level - toscare_level;
+                    monster.addXP(Math.round(xp));
+
+                    // set timout for monster usability
+                    timeout = toscare_level * 5000;
+
+                    // disable monster and show blinking (timeout)
+                    $('.item#'+monster_id).draggable('disable');
+                    monster.interval = window.setInterval(function(){
+                        $('.item#'+monster_id).fadeOut(500).fadeIn(500);
+                    }, 1000);
+
+                    // end timeout for monster after [timeout] milliseconds
+                    window.setTimeout(function(){
+                        // make item draggable again
+                        $('.item#'+monster_id).draggable('enable');
+                        window.clearInterval(monster.interval);
+                    }, timeout);
+                }
+                else
+                {
+                    //monsterDeath(monster_id);
+                }
+
+
+                // END calculate timeout of monster, XP to gain and scare-credits player will get
+            }
+        });
     };
 
     return ns;
