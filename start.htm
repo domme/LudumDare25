@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+
+		<meta charset="utf-8">
+
+		<title>Fear is our business</title>
+
+
+		<!-- jQuery -->
+		<script src="js/jquery.min.js" type="text/javascript"></script>
+
+		<!-- own CSS -->
+		<link href="css/styles.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+			<div id="loginform">
+				
+				<h2 style="margin-top: 0px; line-height: 25px;">Set your monster corporation title and <br />choose the first monster to go with!</h2>
+
+				<div>
+					<input type="text" name="nickname" id="nickname" />
+				</div>
+
+				<div style="margin-top: 10px;">
+					<input type="button" class="btn" value="Monster 1" onclick="startGame(1)" />
+					<input type="button" class="btn" value="Monster 2" onclick="startGame(2)" />
+					<input type="button" class="btn" value="Monster 3" onclick="startGame(3)" />
+				</div>
+
+			</div>
+
+
+			<script>
+
+				// start game automatically
+				if(localStorage.getItem('monster_corp') && localStorage.getItem('monsters'))
+				{
+					// window.location.href = 'game.htm';
+				}
+
+				// start the game
+				function startGame(start_monster)
+				{
+					monsters = new Array();
+
+					if(start_monster == 1)
+						monsters.push({
+							name	: 'mmmone',
+							type	: 'water',
+							xp 		: 0,
+							level 	: 1
+						});
+
+					if(start_monster == 2)
+						monsters.push({
+							name	: 'aaaatwo',
+							type	: 'fire',
+							xp 		: 0,
+							level 	: 1
+						});
+
+					if(start_monster == 3)
+						monsters.push({
+							name	: 'chuuuthree',
+							type	: 'earth',
+							xp 		: 0,
+							level 	: 1
+						});
+
+					localStorage.setItem('monsters', JSON.stringify(monsters));
+					localStorage.setItem('monster_corp', $('#nickname').val());
+					localStorage.setItem('cash', 1000);
+					window.location.href = 'game.htm';
+				}
+
+			</script>
+
+
+	</body>
+
+</html>

@@ -6,10 +6,139 @@ html
 body 
 {
 	height 		: 100%;
-	margin 		: 0;
+	margin 		: 0px;
 	font-family	: Arial, Helvetica, sans-serif;
 	font-size	: 13px;
 	line-height	: 16px;
-	color		: #333333;
-	background	: #ffffff;
+	color		: #DDD;
+	background	: #000;
+}
+
+
+/**
+ *	Loginform
+ */
+
+#loginform
+{
+	width 		: 500px;
+	background 	: rgba(255, 255, 255, 0.15);
+	padding 	: 20px;
+	position 	: absolute;
+	left 		: 50%;
+	top 		: 50%;
+	margin-left : -270px;
+	margin-top 	: -83px;
+	text-align	: center;
+	border-top 	: 4px solid #666;
+}
+
+input
+{
+	font-size 				: 18px;
+	padding 				: 3px;
+	border-radius			: 3px;
+	-webkit-border-radius	: 3px;
+	border 					: 1px solid #AAA;
+}
+
+input.btn
+{
+	padding 				: 5px;
+	border-radius			: 3px;
+	-webkit-border-radius	: 3px;
+	border 					: 1px solid #888;
+	background				: #f2f6f8;
+	background				: -moz-linear-gradient(top,  #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%);
+	background				: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f6f8), color-stop(50%,#d8e1e7), color-stop(51%,#b5c6d0), color-stop(100%,#e0eff9));
+	background				: -webkit-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
+	background				: -o-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
+	background				: -ms-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
+	background				: linear-gradient(to bottom,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
+	filter					: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=0 );
+	font-size 				: 13px;
+	vertical-align			: top;
+}
+
+
+/**
+ *	Game elements
+ */
+
+#cash
+{
+	position 		: absolute;
+	border-bottom 	: 4px solid #666;
+	background 		: rgba(255, 255, 255, 0.15);
+	padding			: 15px;
+	font-size		: 14px;
+	color			: #f5c10d;
+	text-shadow		: 0px 0px 4px #000;
+    filter			: dropshadow(color=#000, offx=0, offy=0);
+}
+
+#sidebar
+{
+	position 		: absolute;
+	right 			: 0px;
+	top 			: 0px;
+	height 			: 100%;
+	width 			: 140px;
+	background 		: rgba(255, 255, 255, 0.15);
+	border-left 	: 4px solid #666;
+
+}
+
+#sidebar h1
+{
+	font-size			: 16px;
+	margin 				: 0px;
+	padding 			: 10px;
+	text-align 			: center;
+	-webkit-box-shadow	:  5px 3px 5px 0px rgba(0, 0, 0, 1);
+	box-shadow			:  5px 3px 5px 0px rgba(0, 0, 0, 1);
+	position			: relative;
+	z-index 			: 100;
+}
+
+#sidebar .item
+{
+	height 			: 140px;
+	width 			: 140px;
+	background 		: rgba(255, 255, 255, 0.15);
+	margin-bottom 	: 1px;
+	cursor 			: pointer;
+
+}
+
+#sidebar .item.water
+{
+	background 		: rgba(0, 0, 255, 0.15);
+}
+
+#sidebar .item.fire
+{
+	background 		: rgba(255, 0, 0, 0.15);
+}
+
+#sidebar .item.earth
+{
+	background 		: rgba(0, 255, 0, 0.15);
+}
+
+#sidebar .item .name
+{
+	display 		: block;
+	font-weight 	: bold;
+	text-align 		: center;
+	padding 		: 5px;
+}
+
+#sidebar .item .xp
+{
+	width 			: 130px;
+	text-align 		: center;
+	padding 		: 5px;
+	position 		: absolute;
+	bottom 			: 5px;
 }
