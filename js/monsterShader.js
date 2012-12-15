@@ -112,7 +112,7 @@ var MonsterShaderLib = {
 				THREE.ShaderChunk[ "shadowmap_fragment" ],
 
 
-				//"gl_FragColor += clamp( vec4( 0.4, 0.4, 0.4, 1.0 ) - vec4( totalDiffuse, 0.0 ), 0.0, 1.0 ) * texture2D( nightTexture, vUv );",
+				"gl_FragColor += clamp( vec4( 0.4, 0.4, 0.4, 1.0 ) - vec4( totalDiffuse, 0.0 ), 0.0, 1.0 ) * texture2D( nightTexture, vUv );",
 				"float fRimDot = 1.0 - max( 0.0, dot( vec3( 0.0, 0.0, 1.0 ), vNormal ) - 0.1 );",
 				"gl_FragColor += vec4( 1.0, 1.0, 1.0, 0.0 ) * fRimDot * fRimDot * fRimDot;",
 

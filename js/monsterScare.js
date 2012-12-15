@@ -15,6 +15,7 @@ var renderer;
 var sunPointlight;
 var earthShaderUniforms;
 var lastTime;
+var cameraControls;
 
 var container, stats;
 
@@ -35,6 +36,9 @@ function init()
 
 	camera = new THREE.PerspectiveCamera( 60, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 200 );
 	camera.position.z = 100;
+
+	cameraControls = new THREE.OrbitControls( camera );
+	cameraControls.addEventListener( 'change', render );
 
 	scene.camera = camera;
 	
@@ -151,20 +155,23 @@ function animate()
 
 function update()
 {
-	globeMesh.rotation.y += 0.0002;
+	globeMesh.rotation.y += 0.001;
+	cameraControls.update();
 }
 
 
 function render() 
 {
 	var currTime = Date.now();
-	var deltaTime = ( currTime - lastTime ) * 0.000002;
+	var deltaTime = ( currTime - lastTime ) * 0.002;
 	lastTime = currTime;
-	console.log( deltaTime );
+	//console.log( deltaTime );
 
-	earthShaderUniforms[ "time" ].value += deltaTime;
-	if( earthShaderUniforms[ "time" ].value > 1.0 )
-		earthShaderUniforms[ "time" ].value = 0.0;
+	earthShaderUniforms[ "time" ].value -= deltaTime;
+
+
+	//if( earthShaderUniforms[ "time" ].value < 0.0 )
+	//	earthShaderUniforms[ "time" ].value = 1.0;
 	
 	globeMaterial.dirty = true;
 
