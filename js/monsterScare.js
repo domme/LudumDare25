@@ -54,8 +54,8 @@ function init()
 	var normalTex = THREE.ImageUtils.loadTexture( "assets/textures/earthbump1k.jpg" );
 	var specularTex = THREE.ImageUtils.loadTexture( "assets/textures/earthspec1k.jpg" );
 	var cloudTex = THREE.ImageUtils.loadTexture( "assets/textures/Earth-Clouds2700.jpg" );
-	cloudTex.wrapS = THREE.RepeatWrapping;
-	cloudTex.wrapT = THREE.RepeatWrapping;
+	cloudTex.wrapS = THREE.MirroredRepeatWrapping;
+	cloudTex.wrapT = THREE.MirroredRepeatWrapping;
 	cloudTex.needsUpdate = true;
 
 	var cityTex = THREE.ImageUtils.loadTexture( "assets/textures/earthlights1k.jpg" );
@@ -163,17 +163,17 @@ function update()
 function render() 
 {
 	var currTime = Date.now();
-	var deltaTime = ( currTime - lastTime ) * 0.002;
-	lastTime = currTime;
+	var deltaTime = ( currTime - lastTime ) * 0.0002;
+	//lastTime = currTime;
 	//console.log( deltaTime );
 
-	earthShaderUniforms[ "time" ].value -= deltaTime;
+	//earthShaderUniforms[ "time" ].value = deltaTime;
 
 
-	//if( earthShaderUniforms[ "time" ].value < 0.0 )
-	//	earthShaderUniforms[ "time" ].value = 1.0;
+	//if( earthShaderUniforms[ "time" ].value > 1.0 )
+	//	earthShaderUniforms[ "time" ].value = 0.0;
 	
-	globeMaterial.dirty = true;
+	//globeMaterial.dirty = true;
 
 	renderer.setViewport( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 	renderer.clear();
