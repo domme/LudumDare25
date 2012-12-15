@@ -18,7 +18,8 @@ var MonsterShaderLib = {
 				"shininess": { type: "f", value: 30 },
 				"wrapRGB"  : { type: "v3", value: new THREE.Vector3( 1, 1, 1 ) },
 				"cloudTexture" : { type: "t", value: null },
-				"nightTexture" : { type: "t", value: null }
+				"nightTexture" : { type: "t", value: null },
+				"time" : { type: "f", value : 0 }
 			}
 
 		] ),
@@ -76,6 +77,7 @@ var MonsterShaderLib = {
 			"uniform vec3 emissive;",
 			"uniform vec3 specular;",
 			"uniform float shininess;",
+			"uniform float time;",
 
 			"uniform sampler2D cloudTexture;",
 			"uniform sampler2D nightTexture;",
@@ -99,24 +101,24 @@ var MonsterShaderLib = {
 				THREE.ShaderChunk[ "alphatest_fragment" ],
 				THREE.ShaderChunk[ "specularmap_fragment" ],
 
+				"gl_FragColor += texture2D( cloudTexture, vUv + vec2( 1.0, 0.0 ) * time );",
 				
-
 				THREE.ShaderChunk[ "lights_phong_fragment" ],
 
 				THREE.ShaderChunk[ "lightmap_fragment" ],
 				THREE.ShaderChunk[ "color_fragment" ],
-
-				//"gl_FragColor *= texture2D( cloudTexture, vUv );",
-				//"gl_FragColor *= texture2D( nightTexture, vUv );",
-
+				
 				THREE.ShaderChunk[ "envmap_fragment" ],
 				THREE.ShaderChunk[ "shadowmap_fragment" ],
+
+
+				//"gl_FragColor += clamp( vec4( 0.4, 0.4, 0.4, 1.0 ) - vec4( totalDiffuse, 0.0 ), 0.0, 1.0 ) * texture2D( nightTexture, vUv );",
+				"float fRimDot = 1.0 - max( 0.0, dot( vec3( 0.0, 0.0, 1.0 ), vNormal ) - 0.1 );",
+				"gl_FragColor += vec4( 1.0, 1.0, 1.0, 0.0 ) * fRimDot * fRimDot * fRimDot;",
 
 				THREE.ShaderChunk[ "linear_to_gamma_fragment" ],
 
 				THREE.ShaderChunk[ "fog_fragment" ],
-
-
 
 			"}"
 
@@ -125,7 +127,7 @@ var MonsterShaderLib = {
 	}
 }
 
-
+/*
 EarthMaterial = function( parameters )
 {
 	THREE.Material.call( this );
@@ -238,4 +240,4 @@ EarthMaterial.prototype.clone = function () {
 
 	return material;
 
-};
+}; */

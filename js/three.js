@@ -20282,7 +20282,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 			shaderID = 'lambert';
 
-		} else if ( material instanceof THREE.MeshPhongMaterial || material instanceof THREE.ShaderMaterial  ) {
+		} else if ( material instanceof THREE.MeshPhongMaterial ) {
 
 			shaderID = 'phong';
 

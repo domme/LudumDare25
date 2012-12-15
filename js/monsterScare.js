@@ -13,6 +13,8 @@ var globeMesh;
 var globeMaterial;
 var renderer;
 var sunPointlight;
+var earthShaderUniforms;
+var lastTime;
 
 var container, stats;
 
@@ -20,6 +22,8 @@ function init()
 {
 	container = document.createElement( 'div' );
 	document.body.appendChild( container );
+
+	lastTime = Date.now();
 
 	scene = new THREE.Scene();
 
@@ -34,9 +38,9 @@ function init()
 
 	scene.camera = camera;
 	
-	scene.add( new THREE.AmbientLight( 0x111111 ) );
+	//scene.add( new THREE.AmbientLight( 0x111111 ) );
 	
-	sunPointlight = new THREE.PointLight( 0xffffff, 2.0, 1000 );
+	sunPointlight = new THREE.PointLight( 0xffffff, 1.0, 1000 );
 	sunPointlight.position.x = 100;
 	sunPointlight.position.y = 100;
 	sunPointlight.position.z = 100;
@@ -46,11 +50,15 @@ function init()
 	var normalTex = THREE.ImageUtils.loadTexture( "assets/textures/earthbump1k.jpg" );
 	var specularTex = THREE.ImageUtils.loadTexture( "assets/textures/earthspec1k.jpg" );
 	var cloudTex = THREE.ImageUtils.loadTexture( "assets/textures/Earth-Clouds2700.jpg" );
+	cloudTex.wrapS = THREE.RepeatWrapping;
+	cloudTex.wrapT = THREE.RepeatWrapping;
+	cloudTex.needsUpdate = true;
+
 	var cityTex = THREE.ImageUtils.loadTexture( "assets/textures/earthlights1k.jpg" );
 
 	
 	var earthShader = MonsterShaderLib[ "earth" ];
-	var earthShaderUniforms = THREE.UniformsUtils.clone( earthShader.uniforms );
+	earthShaderUniforms = THREE.UniformsUtils.clone( earthShader.uniforms );
 
 	earthShaderUniforms[ "cloudTexture" ].value = cloudTex;
 	earthShaderUniforms[ "nightTexture" ].value = cityTex;
@@ -102,6 +110,7 @@ function init()
 	globeMaterial.specularMap = specularTex;
 	//globeMaterial.
 
+
 	
 
 
@@ -142,13 +151,22 @@ function animate()
 
 function update()
 {
-	globeMesh.rotation.y += 0.001;
+	globeMesh.rotation.y += 0.0002;
 }
 
 
 function render() 
 {
-	var r = Date.now() * 0.0005;
+	var currTime = Date.now();
+	var deltaTime = ( currTime - lastTime ) * 0.000002;
+	lastTime = currTime;
+	console.log( deltaTime );
+
+	earthShaderUniforms[ "time" ].value += deltaTime;
+	if( earthShaderUniforms[ "time" ].value > 1.0 )
+		earthShaderUniforms[ "time" ].value = 0.0;
+	
+	globeMaterial.dirty = true;
 
 	renderer.setViewport( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 	renderer.clear();
