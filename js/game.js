@@ -96,7 +96,7 @@ var monsterNameSpace = (function(ns)
         }
         for(var i = 0; i < p35;++i)
         {
-            this.missionManager.createMission(this.player, avgLvl+ns.random(2, 4));
+            this.missionManager.createMission(this.player, avgLvl+ns.random(3, 5));
         }
 
         for(var i = 0; i < p15;++i)
@@ -506,16 +506,16 @@ var monsterNameSpace = (function(ns)
 
                 // Monster is same type? Great! Bonus
                 if(monster.type == toscare_type)
-                    monster_level += 2;
+                    monster_level += 1;
 
                 // Child is on night-side? Yeah! Another bonus...
                 if( isOnNightSide( mis ) )
                  	monster_level += 1;
 
-                var chance = 60 + (monster_level - toscare_level) * 20;
+                var chance = 45 + (monster_level - toscare_level) * 20;
                 if(Math.round(1+Math.random()*100) < chance)
                 {
-                    var cashFlow = Math.abs((monster_level - toscare_level)) * 100;
+                    var cashFlow = Math.max(1, (toscare_level - monster.level)) * 500;
                     if(monster.type == toscare_type)
                         cashFlow *= 2;
 
@@ -527,7 +527,7 @@ var monsterNameSpace = (function(ns)
                     ns.Monster.prototype.addXP.call(monster, Math.round(xp));
 
                     // set timout for monster usability
-                    var timeout = toscare_level * 2000;
+                    var timeout = toscare_level * 3000;
 
                     // disable monster and show blinking (timeout)
                     $('.item#'+monster_id).draggable('disable');
