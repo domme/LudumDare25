@@ -227,7 +227,7 @@ var monsterNameSpace = (function(ns)
         this.div = null;
     };
 
-    ns.Mission.prototype.draw = function()
+    ns.Mission.prototype.draw = function(x, y)
     {
         if(this.div != null) return;
 
@@ -235,6 +235,9 @@ var monsterNameSpace = (function(ns)
         this.div.className = "missionWindow";
         this.div.dataset['type'] = this.children.random;
         this.div.dataset['level'] = this.children.age;
+        this.div.style.position = "absolute";
+        this.div.style.bottom = y+"px";
+        this.div.style.left = x+"px";
 
         $('body').append(this.div);
 
