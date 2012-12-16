@@ -529,14 +529,14 @@ var monsterNameSpace = (function(ns)
 
                 // Monster is same type? Great! Bonus
                 if(monster.type == toscare_type)
-                    monster_level += 1;
+                    monster_level += 2;
 
                 // Child is on night-side? Yeah! Another bonus...
                 if( isOnNightSide( mis ) )
                  	monster_level += 1;
 
                 var diff = monster_level - toscare_level;
-                var chance = 45 + (diff>0?diff*25:diff*15);
+                var chance = 45 + (diff>0?diff*25:diff*10);
                 console.log(diff);
                 console.log(monster_level);
                 console.log(toscare_level);
