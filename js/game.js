@@ -177,7 +177,7 @@ var monsterNameSpace = (function(ns)
 
         for(var id in this.player.monsterManager.monsterList)
         {
-        	monster = this.player.monsterManager.monsterList[id]
+        	var monster = this.player.monsterManager.monsterList[id];
             list.append('<div id="'+id+'" class="item" data-type="'+monster.type+'">'
                 +'<span class="name">'
                 +monster.name+' ('+monster.level+')'
