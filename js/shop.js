@@ -99,12 +99,37 @@ var monsterNameSpace = (function(ns)
 
 	ns.shopManager.prototype.generateNewItems = function()
 	{
+
+	
+		var name_array = 
+		[
+		 "Smof", 
+		 "Foes", 
+		 "Ebela", 
+		 "Achi", 
+		 "Iti", 
+		 "Aged", 
+		 "Deld", 
+		 "Epoli", 
+		 "Yth", 
+		 "Eire", 
+		 "Ienda", 
+		 "Ras", 
+		 "Yvore", 
+		 "Nyt", 
+		 "Smun", 
+		 "Nouv", 
+		 "Beurt", 
+		 "Serd", 
+		 "Noc"
+		]
+
 		var level_1 = Math.floor(Math.random() * (4 - 3 + 1)) + 3;
 		var level_2 = Math.floor(Math.random() * (7 - 5 + 1)) + 5;
 		var level_3 = Math.floor(Math.random() * (10 - 8 + 1)) + 8;
 
 		self.addItem({
-			name		: 'mmmone',
+			name		: name_array[Math.floor(Math.random()*name_array.length)],
 			type		: ns.Monster.TYPES.getRandom(),
 			xp 			: 0,
 			level 		: level_1,
@@ -112,7 +137,7 @@ var monsterNameSpace = (function(ns)
 			price		: getPrice(level_1)
 		});
 		self.addItem({
-			name		: 'ergvsdg',
+			name		: name_array[Math.floor((Math.random()/2)*name_array.length)],
 			type		: ns.Monster.TYPES.getRandom(),
 			xp 			: 0,
 			level 		: level_2,
@@ -120,7 +145,7 @@ var monsterNameSpace = (function(ns)
 			price		: getPrice(level_2)
 		});
 		self.addItem({
-			name		: 'sdfsdfgh',
+			name		: name_array[Math.floor((Math.random())*name_array.length)],
 			type		: ns.Monster.TYPES.getRandom(),
 			xp 			: 0,
 			level 		: level_3,

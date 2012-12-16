@@ -184,9 +184,9 @@ var monsterNameSpace = (function(ns)
                 +monster.name+' ('+monster.level+')'
                 +'</span>'
                 +'<span class="xp">'
-                +monster.xp+' / '+ns.Monster.getXpRange(monster.level)
+                +monster.xp+' / '+ns.Monster.getXpRange(monster.level)+' XP'
                 +'</span>'
-                +'<div class="outtimebar" style="width: 1px;"></div>'
+                +'<div class="outtimebar" style="width: 0px;"></div>'
                 +'</div>');
         }
         $("#sidebar #monsters .item").draggable({
@@ -425,8 +425,29 @@ var monsterNameSpace = (function(ns)
     {
         this.player = player;
 
+        var gender = Math.round(Math.random())
 
-        this.children = {name:'Domi Lazarek', gender: 0, random: ns.Monster.TYPES.getRandom(), age: 1};
+		var name_array = 
+		[
+		 "Tom", 
+		 "Mick", 
+		 "Mike", 
+		 "Kill", 
+		 "Ruth", 
+		 "Ben", 
+		 "Marc", 
+		 "Lex", 
+		 "Bane", 
+		 "Bruce", 
+		 "Peter", 
+		 "Clarc", 
+		 "Carsten", 
+		 "Shane", 
+		 "Domminik",
+		 "Jeanette" 
+		]
+
+        this.children = {name: name_array[Math.floor(Math.random() * name_array.length)], gender: gender, random: ns.Monster.TYPES.getRandom(), age: 1};
         this.location = {phi:0,theta:0};
 
         this.div = null;
@@ -473,7 +494,7 @@ var monsterNameSpace = (function(ns)
 
         $('body').append(this.div);
         this.div.appendChild(this.missionDetails);
-        this.div.appendChild(document.createTextNode("Name: "+this.children.name));
+        this.div.appendChild(document.createTextNode(""+this.children.name));
         this.div.appendChild(document.createElement("br"));
         this.div.appendChild(document.createTextNode("Age: "+this.children.age));
         this.div.appendChild(document.createElement("br"));
@@ -554,7 +575,7 @@ var monsterNameSpace = (function(ns)
                         $('.item#'+monster_id).draggable('enable');
                         $('.item#'+monster_id).css({'opacity': 1});
                         window.clearInterval(monster_timeout);
-                        $('.item#'+monster_id+' .outtimebar').css({'width': '-='+step});
+                        $('.item#'+monster_id+' .outtimebar').css({'width': '0px'});
                     }, timeout);
 
                     var img = document.createElement('img');
