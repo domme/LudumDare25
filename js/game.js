@@ -248,7 +248,7 @@ var monsterNameSpace = (function(ns)
         {
             this.xp = 0;
             this.level++;
-            this.daily_fee+=1000;
+            this.daily_fee+=500;
         }
         game.gui.drawHUD();
     };
