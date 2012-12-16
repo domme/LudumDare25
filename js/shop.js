@@ -18,7 +18,7 @@ var monsterNameSpace = (function(ns)
 							 + 'onclick="if(monsterNameSpace.shop.buyItem(\''+self.items[k].name+'\') != true) '
 							 + 'monsterNameSpace.shop.buyItem(\''+self.items[k].name+'\') ">'
 							 + '<div class="name">'+self.items[k].name+' ('+self.items[k].level+')</div>'
-                             + '<div class="price">'+self.items[k].price+' $</div>'
+                             + '<div class="price">'+self.items[k].price+' $ <br /> +'+self.items[k].daily_fee+' / day </div>'
 							 + '</div>'
 				}
 
