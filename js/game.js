@@ -363,7 +363,7 @@ var monsterNameSpace = (function(ns)
                     ns.Monster.prototype.addXP.call(monster, Math.round(xp));
 
                     // set timout for monster usability
-                    timeout = toscare_level * 5000;
+                    var timeout = toscare_level * 5000;
 
                     // disable monster and show blinking (timeout)
                     $('.item#'+monster_id).draggable('disable');
