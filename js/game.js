@@ -428,7 +428,7 @@ function init()
 	
 	waterLandImageAdapter.waterLandImage = new Image();
 	waterLandImageAdapter.waterLandImage.onload = function(){ waterLandTexLoaded();}
-	waterLandImageAdapter.waterLandImage.src = "assets/textures/earthspec1k.jpg";
+	waterLandImageAdapter.waterLandImage.src = "assets/textures/earthspec_small_debug.jpg";
 
 
 	var cloudTex = THREE.ImageUtils.loadTexture( "assets/textures/Earth-Clouds2700.jpg" );
@@ -535,23 +535,23 @@ function waterLandTexLoaded()
 	var imgContext = imgCanvas.getContext( '2d' );
 	imgContext.drawImage( waterLandImageAdapter.waterLandImage, 0, 0 );
 
-	waterLandImageAdapter.waterLandImageData = imgContext.getImageData( 0, 0, 2000, 1000 );
+	waterLandImageAdapter.waterLandImageData = imgContext.getImageData( 0, 0, 200, 100 );
 	waterLandImageAdapter.ready = true;
 	createRandomChildMissionGraphics();
 }
 
 function isOnLand( phi, theta )
 {
-	var normX = phi / ( Math.PI * 2 ) ;
-	var normY = theta / ( Math.PI );
+	var normX = phi / ( Math.PI * 2 );
+	var normY =  theta / ( Math.PI );
 
-	var x = normX * 2000;
-	var y = normY * 1000;
+	var x = normX * 200;
+	var y = normY * 100;
 
-	var i = y * 2000 + x;
+	var i = y * 200 + x;
 	var pixelValue = waterLandImageAdapter.waterLandImageData.data[ Math.floor( i ) ]; 
 	console.log( pixelValue );
-	return pixelValue < 200;
+	return pixelValue < 230;
 }
 
 function createRandomChildMissionGraphics()
@@ -604,7 +604,7 @@ function update()
 	cameraControls.update();
 }
 
-function intersectWithMouse(  )
+function intersectWithMouse( event )
 {
 	var mouseScenePos = new THREE.Vector3();
 	mouseScenePos.x = ( event.clientX / SCREEN_WIDTH ) * 2.0 - 1.0;
@@ -655,7 +655,7 @@ function intersectWithMouse(  )
 
 function onMouseMove( event )
 {
-	var pickedMesh = intersectWithMouse();
+	var pickedMesh = intersectWithMouse( event );
 
 	if( pickedMesh != null )
 	{
