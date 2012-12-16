@@ -51,42 +51,42 @@
 				// start the game
 				function startGame(start_monster)
 				{
-					monsters = new Array();
+					monsters = {};
 
 					if(start_monster == 1)
-						monsters.push({
+						monsters['_'+Math.random().toString(36).substr(2, 9)] = {
 							name		: 'mmmone',
 							type		: 1,
 							xp 			: 0,
-							level 		: 3,
+							level 		: 1,
 							daily_fee	: 1000
-						});
+						};
 
 					if(start_monster == 2)
-						monsters.push({
+						monsters['_'+Math.random().toString(36).substr(2, 9)] = {
 							name		: 'aaaatwo',
 							type		: 2,
 							xp 			: 0,
 							level 		: 3,
 							daily_fee	: 1000
-						});
+						};
 
 					if(start_monster == 3)
-						monsters.push({
+						monsters['_'+Math.random().toString(36).substr(2, 9)] = {
 							name		: 'chuuuthree',
 							type		: 3,
 							xp 			: 0,
 							level 		: 3,
 							daily_fee	: 1000
-						});
+						};
 
-					monsters.push({
+					monsters['_'+Math.random().toString(36).substr(2, 9)] = {
 							name		: 'bääärgh',
 							type		: 1,
 							xp 			: 0,
 							level 		: 3,
 							daily_fee	: 9100
-						});
+						};
 
 					localStorage.setItem('monsters', JSON.stringify(monsters));
 					localStorage.setItem('monster_corp', $('#nickname').val());
