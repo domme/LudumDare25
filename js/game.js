@@ -47,8 +47,8 @@ var monsterNameSpace = (function(ns)
 
         this.missionManager = new ns.MissionManager(this.saveGame);
         this.missionManager.createMission(this.player);
-        this.missionManager.createMission(this.player);
-        this.missionManager.createMission(this.player);
+      //  this.missionManager.createMission(this.player);
+       // this.missionManager.createMission(this.player);
 
         ns.shop = new ns.shopManager();
     };
@@ -229,14 +229,19 @@ var monsterNameSpace = (function(ns)
 
     ns.Mission.prototype.draw = function(x, y)
     {
-        if(this.div != null) return;
+        if(this.div != null)
+        {
+            this.div.style.top = y+"px";
+            this.div.style.left = x+"px";    
+            return;
+        }
 
         this.div = document.createElement('div');
         this.div.className = "missionWindow";
         this.div.dataset['type'] = this.children.random;
         this.div.dataset['level'] = this.children.age;
         this.div.style.position = "absolute";
-        this.div.style.bottom = y+"px";
+        this.div.style.top = y+"px";
         this.div.style.left = x+"px";
 
         $('body').append(this.div);
@@ -649,6 +654,19 @@ function update()
 	globeMesh.rotation.y += 0.001;
 	cameraControls.update();
 
+
+
+    if( game !== undefined && game.missionManager !== undefined )
+    {
+        var missionList = game.missionManager.missionList;
+        for( var i = 0; i < missionList.length; ++i )
+        {
+            var pos = updateMissionDivPosition( missionList[ i ] );
+            missionList[ i ].draw( pos.x, pos.y );
+        }    
+    }
+    
+
  
 }
 
@@ -660,7 +678,7 @@ function updateMissionDivPosition( mission )
 
     var worldViewProj = new THREE.Matrix4();
     worldViewProj.multiply( proj, view );
-    worldViewProj.multiply( worldViewProj, modelWorld );
+    worldViewProj.multiply( worldViewProj, globeMesh.matrixWorld );
 
 
     var pos = new THREE.Vector4( mission.mesh.position.x, mission.mesh.position.y, mission.mesh.position.z, 1.0 );
@@ -672,16 +690,16 @@ function updateMissionDivPosition( mission )
 
     //ClipSpace -> NDC
     pos.x = ( pos.x + 1.0 ) / 2.0;
-    pos.y = ( pos.y + 1.0 ) / 2.0;
+    pos.y = 1.0 - ( pos.y + 1.0 ) / 2.0;
 
     var x = pos.x * SCREEN_WIDTH;
     var y = pos.y * SCREEN_HEIGHT;
 
     console.log( x );
     console.log( y );
+    console.log( " " );
 
-    mission.div.position.x = x;
-    mission.div.position.y = y;
+    return new THREE.Vector2( x, y );
 }
 
 function intersectWithMouse( event )
@@ -739,11 +757,11 @@ function onMouseMove( event )
 {
 	var pickedMission = intersectWithMouse( event );
 
-    if( pickedMission != null )
+    /*if( pickedMission != null )
     {
-       updateMissionDivPosition( pickedMission );
-       pickedMission.draw(); 
-    }
+       
+       pickedMission.draw( pos.x, pos.y );
+    }*/
        
 
     /*
