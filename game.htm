@@ -38,25 +38,66 @@
 
 	<body>
 
-		<canvas id="myCanvas" width="200" height="100" style="display:none"></canvas>
+		<div id="preloader" style="text-align: center; margin-top: 200px;">
+			<img src="assets/preloading.jpg" />
+		</div>
 
-		<div id="cash">10000 $</div>
-		<div id="clock">0</div>
+		<div id="game">
+			<canvas id="myCanvas" width="200" height="100" style="display:none"></canvas>
 
-		<div id="sidebar">
-			<h1>Your Monsters</h1>
-			<div id="monsters"></div>
-			<div class="shop" onclick="monsterNameSpace.shop.renderDialog()">Shop</div>
-		</div>	
+			<div id="cash">10000 $</div>
+			<div id="clock">0</div>
+
+			<div id="sidebar">
+				<h1>Your Monsters</h1>
+				<div id="monsters"></div>
+				<div class="shop" onclick="monsterNameSpace.shop.renderDialog()">Shop</div>
+			</div>	
+		</div>
 			
 	</body>
 
-<script>
-	$(document).ready(function(){
-		game = new monsterNameSpace.Game('Scare Factory');
-	    game.start();
-	    $('#sidebar #monsters').height($(window).height()-120);
-	});
-</script>
+	<script>
+		$(document).ready(function(){
+
+			// Usage:
+
+			preload({
+			    1: 'assets/textures/earthmap1k.jpg',
+			    2: 'assets/textures/earthbump1k.jpg',
+			    3: 'assets/textures/earthspec1k.jpg',
+			    4: 'assets/textures/earthspec1k.jpg',
+			    5: 'assets/textures/earthspec_small_debug.jpg',
+			    6: 'assets/textures/Earth-Clouds2700.jpg',
+			    7: 'assets/textures/earthlights1k.jpg'
+			}, 1);
+
+			function preload(list, i) {
+				if(list[i])
+				{
+				    image = new Image();
+					image.src = list[i];
+					image.onload = function(){
+						console.log(list[i]+' loaded.');
+						i++;
+						preload(list, i);
+				    }
+				}
+				else
+				{
+					$('#preloader').hide();
+					$('#game').show();
+					startGame();
+				}
+			}
+
+			function startGame()
+			{
+				game = new monsterNameSpace.Game('Scare Factory');
+			    game.start();
+			    $('#sidebar #monsters').height($(window).height()-120);
+			}
+		});
+	</script>
 
 </html>
