@@ -177,7 +177,7 @@ var monsterNameSpace = (function(ns)
 
         for(var id in this.player.monsterManager.monsterList)
         {
-        	monster = this.player.monsterManager.monsterList[id]
+        	var monster = this.player.monsterManager.monsterList[id];
             list.append('<div id="'+id+'" class="item" data-type="'+monster.type+'">'
                 +'<span class="name">'
                 +monster.name+' ('+monster.level+')'
@@ -402,11 +402,24 @@ var monsterNameSpace = (function(ns)
         else if(this.children.age <= 10)
         	this.missionDetails.src	= 'assets/textures/Children/OldGirl.jpg';
 
+        this.alergic_to = document.createElement('img');
+        if(this.children.random == 1)
+        	this.alergic_to.src	= 'assets/textures/monster/doggy.jpg';
+        else if(this.children.random  == 2)
+        	this.alergic_to.src	= 'assets/textures/monster/slime.jpg';
+        else if(this.children.random == 3)
+        	this.alergic_to.src	= 'assets/textures/monster/spider.jpg';
+        this.alergic_to.style.width = '20px';
+        this.alergic_to.style.height = '20px';
+        this.alergic_to.style.marginTop = '5px';
+
         $('body').append(this.div);
         this.div.appendChild(this.missionDetails);
         this.div.appendChild(document.createTextNode("Name: "+this.children.name));
         this.div.appendChild(document.createElement("br"));
         this.div.appendChild(document.createTextNode("Age: "+this.children.age));
+        this.div.appendChild(document.createElement("br"));
+        this.div.appendChild(this.alergic_to);
 
 
         this.makeDroppable();

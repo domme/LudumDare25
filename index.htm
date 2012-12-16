@@ -99,10 +99,8 @@
 		{
 			var name = 'Sauh';
 
-			switch(i){
-				case '2': name = 'Quah'; break;
-				case '3': name = 'Drash'; break;
-			}
+			if(i == 2) name = 'Quah';
+			if(i == 3) name = 'Drash';
 			
 			var monsters = new Array(new monsterNameSpace.Monster({name: name, type: i}));
 
