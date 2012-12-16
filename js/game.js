@@ -300,7 +300,7 @@ var monsterNameSpace = (function(ns)
 		{
 			var content 	= '<div class="dialogue">'
 							+ 'Your last Monster signed off and you ran out of scare-credits. <br />So basically... You lost the game'
-							+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'start.htm\'" /></div>'
+							+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'index.htm\'" /></div>'
 							+ '</div>'
 
 			$.fancybox({
@@ -506,7 +506,7 @@ function multipleMonsterDeath(list)
 	{
 		var content 	= '<div class="dialogue">'
 						+ 'All your monsters deceased and you ran out of scare-credits. <br />So basically... You lost the game'
-						+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'start.htm\'" /></div>'
+						+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'index.htm\'" /></div>'
 						+ '</div>'
 
 		$.fancybox({
