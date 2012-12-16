@@ -87,21 +87,21 @@ var monsterNameSpace = (function(ns)
 
         var avgLvl = Math.round(lvl/count);
 
-        var p35 = Math.round(count/100*35),
-            p15 = Math.round(count/100*15);
+        var p35 = Math.round(count/100*40),
+            p15 = Math.round(count/100*5);
 
         for(var i = 0; i < p35;++i)
         {
-            this.missionManager.createMission(this.player, avgLvl+ns.random(0, 3));
+            this.missionManager.createMission(this.player, avgLvl+ns.random(1, 3));
         }
         for(var i = 0; i < p35;++i)
         {
-            this.missionManager.createMission(this.player, avgLvl+ns.random(0, 3));
+            this.missionManager.createMission(this.player, avgLvl+ns.random(2, 4));
         }
 
         for(var i = 0; i < p15;++i)
         {
-            this.missionManager.createMission(this.player, avgLvl+ns.random(2, 5));
+            this.missionManager.createMission(this.player, avgLvl+ns.random(4, 6));
         }
         for(var i = 0; i < p15;++i)
         {
@@ -485,6 +485,21 @@ var monsterNameSpace = (function(ns)
                         $('.item#'+monster_id).draggable('enable');
                         window.clearInterval(monster.interval);
                     }, timeout);
+
+                    var img = document.createElement('img');
+                    img.src = 'assets/textures/ScareSplash.jpg';
+
+                    $.fancybox({
+                        type        : 'image',
+                        content 	: "assets/textures/ScareSplash.jpg",
+                        margin 		: 0,
+                        padding 	: 0,
+                        modal       : true
+                    });
+
+                    window.setTimeout(function() {
+                        $.fancybox.close();
+                    }, 1000);
                 }
                 else
                 {
