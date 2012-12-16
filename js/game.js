@@ -274,9 +274,9 @@ var monsterNameSpace = (function(ns)
 		// remove monster from sidebar
 		$('#sidebar #'+id).remove();
 
-		if(game.player.monsterManager.monsterList.length > 0 || game.player.cash >= 6000)
+		if(game.player.monsterManager.monsterList.length > 1 || game.player.cash >= 6000)
 		{
-			if(game.player.monsterManager.monsterList.length > 0)
+			if(game.player.monsterManager.monsterList.length > 1)
 			{
 				var content 	= '<div class="dialogue">'
 								+ 'One of your monsters Monster ('+game.player.monsterManager.monsterList[id].name+') signed off.'
