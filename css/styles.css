@@ -112,6 +112,9 @@ a:Hover
 	margin 		: 4px;
 	cursor 		: pointer;
 }
+#loginform .monster_container:hover {
+    box-shadow: 0 0 5px 5px #f5c10d;
+}
 
 #loginform .monster_container .name
 {
