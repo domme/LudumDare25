@@ -282,7 +282,9 @@ var monsterNameSpace = (function(ns)
     {
         this.player = player;
 
-        this.children = {name:'Domi Lazarek', age:4, gender: 0, random: ns.Monster.TYPES.getRandom()};
+
+        this.children = {name:'Domi Lazarek', gender: 0, random: ns.Monster.TYPES.getRandom()};
+        this.children.age = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
         this.location = {phi:0,theta:0};
 
         this.div = null;
@@ -305,7 +307,22 @@ var monsterNameSpace = (function(ns)
         this.div.style.top = y+"px";
         this.div.style.left = x+"px";
 
+
+
+        this.missionDetails 		= document.createElement('img');
+        if(this.children.age <= 3)
+        	this.missionDetails.src	= 'assets/textures/Children/ScaredGirl_1.jpg';
+        else if(this.children.age < 7)
+        	this.missionDetails.src	= 'assets/textures/Children/Freaky_Boy.jpg';
+        else if(this.children.age <= 10)
+        	this.missionDetails.src	= 'assets/textures/Children/OldGirl.jpg';
+
         $('body').append(this.div);
+        this.div.appendChild(this.missionDetails);
+        this.div.appendChild(document.createTextNode("Name: "+this.children.name));
+        this.div.appendChild(document.createElement("br"));
+        this.div.appendChild(document.createTextNode("Age: "+this.children.age));
+
 
         this.makeDroppable();
     };

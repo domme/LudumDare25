@@ -293,17 +293,18 @@ input.btn
 	left					: 200px; 
 	top						: 200px; 
 	width					: 200px; 
-	height					: 100px; 
-	background				: rgba(190, 0, 0, 0.3); 
-	border					: 2px solid #AA0000; 
+	height					: 60px; 
+	background				: rgba(150, 150, 150, 0.5); 
+	border					: 2px solid #888888; 
 	border-radius			: 5px; 
 	-webkit-border-radius	: 5px;	
+	overflow 				: hidden;
 }
 
-.missionWindow[data-type="2"] {
-    background-color: rgba(0, 190, 0, 0.3);
+.missionWindow img
+{
+	height 			: 60px;
+	width 			: 60px;
+	margin-right 	: 5px;
+	float 			: left;
 }
-.missionWindow[data-type="3"] {
-    background-color: rgba(0, 0, 190, 0.3);
-}
-
