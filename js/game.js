@@ -503,7 +503,18 @@ var monsterNameSpace = (function(ns)
                 }
                 else
                 {
-                   game.player.monsterManager.monsterDie(monster_id);
+                    $.fancybox({
+                        type        : 'image',
+                        content 	: "assets/textures/DefeatSplash.jpg",
+                        margin 		: 0,
+                        padding 	: 0,
+                        modal       : true
+                    });
+
+                    window.setTimeout(function() {
+                        $.fancybox.close();
+                    }, 1000);
+                    game.player.monsterManager.removeMonster(monster_id);
                 }
 
                 game.missionManager.deleteMission(mis);
