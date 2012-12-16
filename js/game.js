@@ -186,6 +186,7 @@ var monsterNameSpace = (function(ns)
                 +'<span class="xp">'
                 +monster.xp+' / '+ns.Monster.getXpRange(monster.level)
                 +'</span>'
+                +'<div class="outtimebar" style="width: 1px;"></div>'
                 +'</div>');
         }
         $("#sidebar #monsters .item").draggable({
@@ -247,7 +248,7 @@ var monsterNameSpace = (function(ns)
         {
             this.xp = 0;
             this.level++;
-            this.daily_fee+=1000;
+            this.daily_fee+=2000;
         }
         game.gui.drawHUD();
     };
@@ -504,6 +505,7 @@ var monsterNameSpace = (function(ns)
                 var toscare_type 		= $(this).attr('data-type');
                 var monster 			= game.player.monsterManager.monsterList[monster_id];
                 var monster_level 		= monster.level;
+                var monster_timeout;
 
                 // Monster is same type? Great! Bonus
                 if(monster.type == toscare_type)
@@ -532,15 +534,22 @@ var monsterNameSpace = (function(ns)
 
                     // disable monster and show blinking (timeout)
                     $('.item#'+monster_id).draggable('disable');
-                    monster.interval = window.setInterval(function(){
-                        $('.item#'+monster_id).fadeOut(500).fadeIn(500);
+                    
+                    $('.item#'+monster_id).css({'opacity': 0.5});
+                    $('.item#'+monster_id+' .outtimebar').css({'width': 140+'px'});
+
+                    var step = Math.round(140/(timeout/1000));
+                    monster_timeout = window.setInterval(function(){
+                    	$('.item#'+monster_id+' .outtimebar').css({'width': '-='+step});
                     }, 1000);
 
-                    // end timeout for monster after [timeout] milliseconds
+                    // make monster available after [timeout] milliseconds
                     window.setTimeout(function(){
                         // make item draggable again
                         $('.item#'+monster_id).draggable('enable');
-                        window.clearInterval(monster.interval);
+                        $('.item#'+monster_id).css({'opacity': 1});
+                        window.clearInterval(monster_timeout);
+                        $('.item#'+monster_id+' .outtimebar').css({'width': '-='+step});
                     }, timeout);
 
                     var img = document.createElement('img');
