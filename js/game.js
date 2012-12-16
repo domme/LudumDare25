@@ -15,7 +15,8 @@ var timeSpeed = 2.0;
 var centerCubeMesh;
 var deltaTime;
 var currentHour = 1.0;
-
+var daysPlayed = 0;
+var updateShopFrequency = 5;
 
 
 var waterLandImageAdapter = function()
@@ -841,6 +842,10 @@ function updateTime()
 
     if(Math.floor(currentHour)==0)
     {
+        ++daysPlayed;
+        if( daysPlayed % updateShopFrequency == 0 )
+            monsterNameSpace.shop.generateNewItems();
+
         game.player.payDailyFee();
     } else if(Math.floor(currentHour)==12) {
         game.generateMissions();
