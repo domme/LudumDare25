@@ -552,7 +552,7 @@ var monsterNameSpace = (function(ns)
                     game.player.cash += cashFlow;
 
                     // get XP
-                    var xp = 11 * (monster_level / 3) - monster_level - toscare_level;
+                    var xp = 11 * (monster.level / 3) - monster.level - toscare_level;
                     ns.Monster.prototype.addXP.call(monster, Math.round(xp));
 
                     // set timout for monster usability
