@@ -68,9 +68,7 @@ var monsterNameSpace = (function(ns)
 
 	ns.shopManager.prototype.buyItem = function(name)
 	{
-		console.log(1);
 		monsterManager = game.player.monsterManager;
-		console.log(objLength(game.player.monsterManager.monsterList));
         if(game.player.cash - self.items[name].price < 0)
         {
             this.noCredits();

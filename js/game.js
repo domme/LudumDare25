@@ -149,7 +149,7 @@ var monsterNameSpace = (function(ns)
 
         if(dies.length > 0)
         {
-            //multipleMonsterDeath(dies);
+            this.monsterManager.multiMonsterDie(dies);
         }
 
         this.cash -= total;
@@ -275,13 +275,20 @@ var monsterNameSpace = (function(ns)
 	// monster dies because it didn't manage to scare a fucking child...
 	ns.MonsterManager.prototype.monsterDie = function(id)
 	{
-		console.log('lost');
+		function objLength(obj) {
+		    var size = 0, key;
+		    for (key in obj) {
+		        if (obj.hasOwnProperty(key)) size++;
+		    }
+		    return size;
+		};
+
 		// remove monster from sidebar
 		$('#sidebar #'+id).remove();
 
-		if(game.player.monsterManager.monsterList.length > 1 || game.player.cash >= 6000)
+		if(objLength(game.player.monsterManager.monsterList) > 1 || game.player.cash >= 6000)
 		{
-			if(game.player.monsterManager.monsterList.length > 1)
+			if(objLength(game.player.monsterManager.monsterList) > 1)
 			{
 				var content 	= '<div class="dialogue">'
 								+ 'One of your monsters Monster ('+game.player.monsterManager.monsterList[id].name+') signed off.'
@@ -304,7 +311,7 @@ var monsterNameSpace = (function(ns)
 		else
 		{
 			var content 	= '<div class="dialogue">'
-							+ 'Your last Monster signed off and you ran out of scare-credits. <br />So basically... You lost the game'
+							+ 'Your last Monster signed off and you ran out of scare-credits. <br />So basically... YOU ARE FIRED!'
 							+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'index.htm\'" /></div>'
 							+ '</div>'
 
@@ -317,6 +324,54 @@ var monsterNameSpace = (function(ns)
 		}
 
 		game.player.monsterManager.removeMonster(id);
+	};
+
+	// monster dies because it didn't manage to scare a fucking child...
+	ns.MonsterManager.prototype.multiMonsterDie = function(list)
+	{
+		function objLength(obj) {
+		    var size = 0, key;
+		    for (key in obj) {
+		        if (obj.hasOwnProperty(key)) size++;
+		    }
+		    return size;
+		};
+
+		console.log(objLength(game.player.monsterManager.monsterList));
+
+		if(objLength(game.player.monsterManager.monsterList) > list.length)
+		{
+			var content 	= '<div class="dialogue">'
+							+ list.length+' of your Monsters signed off because you couldn\'t pay. You better go to work.'
+							+ '</div>'
+
+			$.fancybox({
+				content 	: content,
+				margin 		: 0,
+				padding 	: 0
+			});		
+		}
+		else
+		{
+			var content 	= '<div class="dialogue">'
+							+ 'All your monsters signed off and you ran out of scare-credits. <br />So basically... YOU ARE FIRED!'
+							+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'index.htm\'" /></div>'
+							+ '</div>'
+
+			$.fancybox({
+				content 	: content,
+				margin 		: 0,
+				padding 	: 0,
+				modal 		: true
+			});		
+		}
+
+		for(i = 0; i < list.length; i++)
+		{
+			$('.item#'+list[i]).remove();
+			game.player.monsterManager.removeMonster(i);
+			localStorage.setItem('monsters', JSON.stringify(game.player.monsterManager.monsterList));
+		}
 	};
 
     /*******************************************************************************************************************
@@ -529,46 +584,6 @@ var monsterNameSpace = (function(ns)
 var game = null;
 
 
-
-// monster dies because it didn't manage to scare a fucking child...
-function multipleMonsterDeath(list)
-{
-	if(mymonsters.length > list.length)
-	{
-		var content 	= '<div class="dialogue">'
-						+ list.length+' of your Monsters deceased.'
-						+ '</div>'
-
-		$.fancybox({
-			content 	: content,
-			margin 		: 0,
-			padding 	: 0
-		});		
-	}
-	else
-	{
-		var content 	= '<div class="dialogue">'
-						+ 'All your monsters deceased and you ran out of scare-credits. <br />So basically... You lost the game'
-						+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'index.htm\'" /></div>'
-						+ '</div>'
-
-		$.fancybox({
-			content 	: content,
-			margin 		: 0,
-			padding 	: 0,
-			modal 		: true
-		});		
-	}
-
-	for(i = 0; i < list.length; i++)
-	{
-		$('.item#'+list[i]).remove();
-		mymonsters.splice(list[i], 1);
-		localStorage.setItem('monsters', JSON.stringify(mymonsters));
-	}
-}
-
-
 function payDailyFee()
 {
 	mymonsters.sort(function(a, b){
@@ -775,7 +790,6 @@ function isOnLand( phi, theta )
 
 	var i = y * 200 + x;
 	var pixelValue = waterLandImageAdapter.waterLandImageData.data[ Math.floor( i ) ]; 
-	console.log( pixelValue );
 	return pixelValue < 230;
 }
 
