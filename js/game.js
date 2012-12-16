@@ -146,7 +146,7 @@ var monsterNameSpace = (function(ns)
     ns.Monster.TYPES = {
         getRandom: function()
         {
-            return Math.round(1+Math.random()*3)
+            return Math.floor(Math.random() * (3 - 1 + 1)) + 1;
         },
         CAR: 1,
         CLOWN: 2,
