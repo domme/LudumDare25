@@ -198,6 +198,22 @@ var monsterNameSpace = (function(ns)
         this.missionList.push(mis);
     };
 
+    ns.MissionManager.prototype.deleteMission = function(mission)
+    {
+        var foundKey = -1;
+        for(var i = 0, mis = null;mis = this.missionList[i];++i)
+        {
+            if(mis != mission) continue;
+
+            foundKey = i;
+            break;
+        }
+
+        if(foundKey==-1) return;
+        this.missionList.splice(foundKey,1);
+        globeMesh.remove(missionMeshes.splice(foundKey,1)[0]);
+    };
+
     /*******************************************************************************************************************
      * MISSION
      ******************************************************************************************************************/
@@ -275,16 +291,14 @@ var monsterNameSpace = (function(ns)
                         $('.item#'+monster_id).draggable('enable');
                         window.clearInterval(monster.interval);
                     }, timeout);
-
-                    $(this).remove();
-                    mis.div = null;
                 }
                 else
                 {
                     //monsterDeath(monster_id);
                 }
 
-
+                $(this).remove();
+                game.missionManager.deleteMission(mis);
                 // END calculate timeout of monster, XP to gain and scare-credits player will get
             }
         });
@@ -695,7 +709,7 @@ function onMouseMove( event )
 
     for(var i= 0,mesh =null;mesh=missionMeshes[i];++i)
     {
-        if(pickedMesh==mesh) continue;
+        if(pickedMesh==mesh || mesh.wasActive == 0) continue;
 
         mesh.wasActive = 0;
         mesh.material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
