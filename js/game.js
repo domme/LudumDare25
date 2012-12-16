@@ -344,8 +344,8 @@ var monsterNameSpace = (function(ns)
                     monster_level += 2;
 
                 // Child is on night-side? Yeah! Another bonus...
-                // if(mymonsters[monster_id].type == toscare_type)
-                // 	monster_level += 1;
+                if( isOnNightSide( mis ) )
+                 	monster_level += 1;
 
                 var chance = 60 + (monster_level - toscare_level) * 20;
                 if(Math.round(1+Math.random()*100) < chance)
@@ -781,7 +781,6 @@ function intersectWithMouse( event )
 function isOnNightSide( missionObject )
 {
     var mesh = missionObject.mesh;
-
 
     var vMeshPos = new THREE.Vector3();
     vMeshPos.copy( mesh.matrixWorld.getPosition() );
