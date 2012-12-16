@@ -11,6 +11,11 @@ var globeCloudMaterial;
 var globeCityMaterial;
 var renderer;
 var sunPointlight;
+var timeSpeed = 10.0;
+var centerCubeMesh;
+var deltaTime;
+var currentHour = 1.0;
+
 
 
 var waterLandImageAdapter = function()
@@ -499,13 +504,15 @@ function init()
 
 	scene.camera = camera;
 	
-	//scene.add( new THREE.AmbientLight( 0x111111 ) );
 	
+    centerCubeMesh = new THREE.Mesh( new THREE.SphereGeometry( 0.1, 1, 1 ), new THREE.MeshBasicMaterial() );
+    scene.add( centerCubeMesh );
+
 	sunPointlight = new THREE.PointLight( 0xffffff, 1.0, 1000 );
 	sunPointlight.position.x = 100;
 	sunPointlight.position.y = 100;
 	sunPointlight.position.z = 100;
-	scene.add( sunPointlight );
+	centerCubeMesh.add( sunPointlight );
 
 	var colorTex = THREE.ImageUtils.loadTexture( "assets/textures/earthmap1k.jpg" );
 	var normalTex = THREE.ImageUtils.loadTexture( "assets/textures/earthbump1k.jpg" );
@@ -582,6 +589,7 @@ function init()
 	globeMesh.position.y = 0;
 	globeMesh.position.z = 0;
 	scene.add( globeMesh );
+
 
 
 
@@ -671,6 +679,19 @@ function onWindowResize( event )
 	$('#sidebar #monsters').height($(window).height()-120);
 }
 
+function setTime( hour )
+{
+    currentHour = hour;
+
+    var rotation = ( currentHour / 24.0 ) * Math.PI * 2.0; 
+
+    centerCubeMesh.rotation.y = rotation;
+}
+
+function updateTime()
+{
+    setTime( currentHour + timeSpeed * deltaTime );
+}
 
 function animate() 
 {
@@ -682,8 +703,9 @@ function animate()
 
 function update()
 {
-	globeMesh.rotation.y += 0.001;
 	cameraControls.update();
+
+    updateTime();
 
     if( game !== undefined && game.missionManager !== undefined )
     {
@@ -842,8 +864,8 @@ function onMouseMove( event )
 function render() 
 {
 	var currTime = Date.now();
-	var deltaTime = ( currTime - lastTime ) * 0.0002;
-	//lastTime = currTime;
+	deltaTime = ( currTime - lastTime ) * 0.0002;
+	lastTime = currTime;
 	//console.log( deltaTime );
 
 	//earthShaderUniforms[ "time" ].value = deltaTime;
