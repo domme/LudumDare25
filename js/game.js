@@ -74,6 +74,42 @@ var monsterNameSpace = (function(ns)
 
         this.monsterManager = new ns.MonsterManager(this.saveGame.get('monsters',[]));
     };
+
+    ns.Player.prototype.payDailyFee = function()
+    {
+        this.monsterManager.monsterList.sort(function(a, b){
+            if(a.level < b.level)
+                return(-1);
+            if(a.level > b.level)
+                return(1);
+
+            if(a.daily_fee < b.daily_fee)
+                return(-1);
+            if(a.daily_fee > b.daily_fee)
+                return(1);
+
+            return(0);
+        });
+
+
+        var total = 0;
+        var dies  = new Array();
+
+        for(var i in this.monsterManager.monsterList)
+        {
+            if(this.cash - (total+this.monsterManager.monsterList[i].daily_fee) < 0)
+                dies.push(i);
+            else
+                total += this.monsterManager.monsterList[i].daily_fee;
+        }
+
+        if(dies.length > 0)
+        {
+            //multipleMonsterDeath(dies);
+        }
+
+        this.cash -= total;
+    };
     /*******************************************************************************************************************
      * GUI
      ******************************************************************************************************************/
@@ -690,7 +726,13 @@ function setTime( hour )
 
 function updateTime()
 {
-    setTime( currentHour + timeSpeed * deltaTime );
+    var t = currentHour + timeSpeed * deltaTime;
+    setTime( t%24 );
+
+    if(Math.floor(currentHour)==0)
+    {
+        game.player.payDailyFee();
+    }
 }
 
 function animate() 
