@@ -20,7 +20,7 @@ var waterLandImageAdapter = function()
 	var waterLandImage = new Image();
 	var waterLandImageData = null;	
 	var ready = false;
-}
+};
 
 var container, stats;
 
@@ -48,12 +48,11 @@ var monsterNameSpace = (function(ns)
 
         this.missionManager = new ns.MissionManager(this.saveGame);
         this.missionManager.createMission(this.player);
+        this.missionManager.createMission(this.player);
+        this.missionManager.createMission(this.player);
 
-        
+        ns.shop = new ns.shopManager();
     };
-
-    ns.shop = new ns.shopManager();
-
     /*******************************************************************************************************************
      * PLAYER
      ******************************************************************************************************************/
@@ -87,12 +86,12 @@ var monsterNameSpace = (function(ns)
 
         for(var i = 0, monster = null; monster = this.player.monsterManager.monsterList[i]; ++i)
         {
-            list.append('<div id="'+i+'" class="item '+monster.type+'">'
+            list.append('<div id="'+i+'" class="item" data-type="'+monster.type+'">'
                 +'<span class="name">'
                 +monster.name+' ('+monster.level+')'
                 +'</span>'
                 +'<span class="xp">'
-                +monster.xp+' / '+ns.Monster.prototype.getXpRange(monster.level)
+                +monster.xp+' / '+ns.Monster.getXpRange(monster.level)
                 +'</span>'
                 +'</div>');
         }
@@ -131,21 +130,32 @@ var monsterNameSpace = (function(ns)
         }
     };
 
+    ns.Monster.getXpRange = function(level)
+    {
+        return(Math.round(22 * (level)/3));
+    };
+
+    ns.Monster.TYPES = {
+        getRandom: function()
+        {
+            return Math.round(1+Math.random()*3)
+        },
+        CAR: 1,
+        CLOWN: 2,
+        SPIDER: 3
+    };
+
     ns.Monster.prototype.addXP = function(amount)
     {
         this.xp += amount;
 
         // if amount of xp are over range: level up
-        if(this.xp >= monster.getXpRange(this.level))
+        if(this.xp >= ns.Monster.getXpRange(this.level))
         {
             this.xp = 0;
             this.level++;
         }
         game.gui.drawHUD();
-    };
-    ns.Monster.prototype.getXpRange = function(level)
-    {
-        return(Math.round(22 * (level)/3));
     };
     /*******************************************************************************************************************
      * Monster Manager
@@ -178,7 +188,13 @@ var monsterNameSpace = (function(ns)
     {
         var mis = new ns.Mission(player);
 
-		createRandomChildMissionGraphics();        
+        var phi = Math.random() * 2 * Math.PI;
+        var theta = Math.random() * Math.PI;
+
+		createRandomChildMissionGraphics(phi, theta, (function(obj, method) { return function() {method.apply(obj, arguments)}; })(mis,mis.draw));
+        mis.location.phi = phi;
+        mis.location.theta = theta;
+
         this.missionList.push(mis);
     };
 
@@ -189,16 +205,29 @@ var monsterNameSpace = (function(ns)
     {
         this.player = player;
 
-        this.children = {name:'Domi Lazarek', age:4, gender: 0, random: 1, location:{}};
+        this.children = {name:'Domi Lazarek', age:4, gender: 0, random: ns.Monster.TYPES.getRandom()};
+        this.location = {phi:0,theta:0};
+
+        this.div = null;
     };
 
     ns.Mission.prototype.draw = function()
     {
-        missionWindow = '<div class="missionWindow" data-type="'+this.children.random+'" data-level="'+this.children.age+'"></div>';
+        if(this.div != null) return;
+
+        this.div = document.createElement('div');
+        this.div.className = "missionWindow";
+        this.div.dataset['type'] = this.children.random;
+        this.div.dataset['level'] = this.children.age;
+
+        $('body').append(this.div);
+
+        this.makeDroppable();
     };
 
     ns.Mission.prototype.makeDroppable = function()
     {
+        var mis = this;
         $(".missionWindow").droppable({
             drop	: function(e, ui) {
 
@@ -229,7 +258,7 @@ var monsterNameSpace = (function(ns)
 
                     // get XP
                     var xp = 11 * (monster_level / 3) - monster_level - toscare_level;
-                    monster.addXP(Math.round(xp));
+                    ns.Monster.prototype.addXP.call(monster, Math.round(xp));
 
                     // set timout for monster usability
                     timeout = toscare_level * 5000;
@@ -246,6 +275,9 @@ var monsterNameSpace = (function(ns)
                         $('.item#'+monster_id).draggable('enable');
                         window.clearInterval(monster.interval);
                     }, timeout);
+
+                    $(this).remove();
+                    mis.div = null;
                 }
                 else
                 {
@@ -554,21 +586,13 @@ function isOnLand( phi, theta )
 	return pixelValue < 230;
 }
 
-function createRandomChildMissionGraphics()
+function createRandomChildMissionGraphics(phi, theta, cb)
 {
-	if( !waterLandImageAdapter.ready )
-		return;
-
-	do
-	{
-		var phi = Math.random() * 2 * Math.PI;
-		var theta = Math.random() * Math.PI;
-	} while( !isOnLand( phi, theta ) );
-
 	var newMissionMesh = new THREE.Mesh( new THREE.SphereGeometry( 2, 10, 10 ), new THREE.MeshBasicMaterial( { color: 0x0000ff } ) );
 	newMissionMesh.position.x = globeRadius * Math.sin( theta ) * Math.cos( phi );
 	newMissionMesh.position.y = globeRadius * Math.sin( theta ) * Math.sin( phi );
 	newMissionMesh.position.z = globeRadius * Math.cos( theta );
+    newMissionMesh.cb = cb;
 
 	missionMeshes.push( newMissionMesh );
 	globeMesh.add( newMissionMesh );
@@ -660,16 +684,23 @@ function onMouseMove( event )
 	if( pickedMesh != null )
 	{
 		console.log( "Hit!" );
+        if(!pickedMesh.wasActive)
+        {
+            pickedMesh.cb();
+            pickedMesh.wasActive = true;
+        }
 		pickedMesh.material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
 		pickedMesh.dirty = true;
-		
 	}
 
-	else
-	{
-		missionMeshes[ 0 ].material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
-		missionMeshes[ 0 ].dirty = true;
-	}
+    for(var i= 0,mesh =null;mesh=missionMeshes[i];++i)
+    {
+        if(pickedMesh==mesh) continue;
+
+        mesh.wasActive = 0;
+        mesh.material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+        mesh.dirty = true;
+    }
 		
 }
 

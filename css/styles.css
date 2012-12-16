@@ -1,4 +1,4 @@
-html 
+html
 {
 	height 	: 100%;
 }
@@ -159,17 +159,17 @@ input.btn
 
 }
 
-#sidebar .item.water
+#sidebar .item[data-type="3"]
 {
 	background 		: rgba(0, 0, 255, 0.6);
 }
 
-#sidebar .item.fire
+#sidebar .item[data-type="1"]
 {
 	background 		: rgba(255, 0, 0, 0.6);
 }
 
-#sidebar .item.earth
+#sidebar .item[data-type="2"]
 {
 	background 		: rgba(0, 255, 0, 0.6);
 }
@@ -260,7 +260,6 @@ input.btn
 {
 	text-align 	: center;
 }
-
 .shop .item .price
 {
 	display 		: block;
@@ -283,3 +282,11 @@ input.btn
 	border-radius			: 5px; 
 	-webkit-border-radius	: 5px;	
 }
+
+.missionWindow[data-type="2"] {
+    background-color: rgba(0, 190, 0, 0.3);
+}
+.missionWindow[data-type="3"] {
+    background-color: rgba(0, 0, 190, 0.3);
+}
+

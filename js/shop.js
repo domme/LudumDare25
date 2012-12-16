@@ -21,7 +21,7 @@ var monsterNameSpace = (function(ns)
 							 + 'else '
 							 + 'monsterNameSpace.shop.noCredits();">'
 							 + '<div class="name">'+self.items[k].name+' ('+self.items[k].level+')</div>'
-							 + '<div class="price">'+self.items[k].price+' $</div>'
+                             + '<div class="price">'+self.items[k].price+' $</div>'
 							 + '</div>'
 				}
 
@@ -93,7 +93,7 @@ var monsterNameSpace = (function(ns)
 
 		self.addItem({
 			name		: 'mmmone',
-			type		: 'water',
+			type		: ns.Monster.TYPES.getRandom(),
 			xp 			: 0,
 			level 		: level_1,
 			daily_fee	: getDaily(level_1),
@@ -101,7 +101,7 @@ var monsterNameSpace = (function(ns)
 		});
 		self.addItem({
 			name		: 'ergvsdg',
-			type		: 'fire',
+			type		: ns.Monster.TYPES.getRandom(),
 			xp 			: 0,
 			level 		: level_2,
 			daily_fee	: getDaily(level_2),
@@ -109,7 +109,7 @@ var monsterNameSpace = (function(ns)
 		});
 		self.addItem({
 			name		: 'sdfsdfgh',
-			type		: 'earth',
+			type		: ns.Monster.TYPES.getRandom(),
 			xp 			: 0,
 			level 		: level_3,
 			daily_fee	: getDaily(level_3),
