@@ -516,7 +516,11 @@ var monsterNameSpace = (function(ns)
                  	monster_level += 1;
 
                 var diff = monster_level - toscare_level;
-                var chance = 45 + diff>0?diff*25:$diff*15;
+                var chance = 45 + (diff>0?diff*25:diff*15);
+                console.log(diff);
+                console.log(monster_level);
+                console.log(toscare_level);
+                console.log(chance);
                 if(Math.round(1+Math.random()*100) < chance)
                 {
                     var cashFlow = Math.max(1, (toscare_level - monster.level)) * 500;
