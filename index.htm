@@ -105,6 +105,7 @@
 			var monsters = new Array(new monsterNameSpace.Monster({name: name, type: i}));
 
 			localStorage.setItem('monsters', JSON.stringify(monsters));
+			localStorage.setItem('cash', 10000);
 			localStorage.setItem('companyName', $('#nickname').val());
 
 			window.location.href = "game.htm";
