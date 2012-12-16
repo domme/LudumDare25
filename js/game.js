@@ -823,6 +823,7 @@ function onWindowResize( event )
 function setTime( hour )
 {
     currentHour = hour;
+    $('#clock').html(Math.round(currentHour)+':00')
 
     var rotation = ( currentHour / 24.0 ) * Math.PI * 2.0; 
 
