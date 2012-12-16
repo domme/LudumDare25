@@ -299,7 +299,8 @@ var monsterNameSpace = (function(ns)
         if(this.div != null)
         {
             this.div.style.top = y+"px";
-            this.div.style.left = x+"px";    
+            this.div.style.left = x+"px";
+            this.div.style.display = "block";
             return;
         }
 
@@ -310,7 +311,7 @@ var monsterNameSpace = (function(ns)
         this.div.style.position = "absolute";
         this.div.style.top = y+"px";
         this.div.style.left = x+"px";
-
+        this.div.style.display = "block";
 
 
         this.missionDetails 		= document.createElement('img');
@@ -330,6 +331,16 @@ var monsterNameSpace = (function(ns)
 
         this.makeDroppable();
     };
+
+    ns.Mission.prototype.hide = function()
+    {
+        if( this.div == null )
+        {
+            return;
+        }
+
+        this.div.style.display = "none";
+    }
 
     ns.Mission.prototype.makeDroppable = function()
     {
@@ -639,6 +650,7 @@ function waterLandTexLoaded()
 	createRandomChildMissionGraphics();
 }
 
+
 function isOnLand( phi, theta )
 {
 	var normX = phi / ( Math.PI * 2 );
@@ -655,7 +667,7 @@ function isOnLand( phi, theta )
 
 function createRandomChildMissionGraphics( phi, theta )
 {
-	var newMissionMesh = new THREE.Mesh( new THREE.SphereGeometry( 2, 10, 10 ), new THREE.MeshBasicMaterial( { color: 0x0000ff } ) );
+	var newMissionMesh = new THREE.Mesh( new THREE.SphereGeometry( 1, 10, 10 ), new THREE.MeshBasicMaterial( { color: 0x0000dd } ) );
 	newMissionMesh.position.x = globeRadius * Math.sin( theta ) * Math.cos( phi );
 	newMissionMesh.position.y = globeRadius * Math.sin( theta ) * Math.sin( phi );
 	newMissionMesh.position.z = globeRadius * Math.cos( theta );
@@ -712,9 +724,15 @@ function update()
         var missionList = game.missionManager.missionList;
         for( var i = 0; i < missionList.length; ++i )
         {
-            var pos = updateMissionDivPosition( missionList[ i ] );
-            missionList[ i ].draw( pos.x, pos.y );
-        }    
+            var mission = missionList[ i ];
+            var pos = updateMissionDivPosition( mission );
+
+            if( isBehindEarthForCamera( mission ) )
+                mission.hide();
+
+            else
+                mission.draw( pos.x, pos.y );
+        }
     }
     
 
@@ -799,6 +817,29 @@ function intersectWithMouse( event )
 	return null;
 }
 
+
+function isBehindEarthForCamera( missionObject )
+{
+    var mesh = missionObject.mesh;
+
+    var vMeshPos = new THREE.Vector3();
+    vMeshPos.copy( mesh.matrixWorld.getPosition() );
+
+    var vGlobePos = new THREE.Vector3();
+    vGlobePos.copy( globeMesh.matrixWorld.getPosition() );
+
+    var vMissionNormal = new THREE.Vector3();
+    vMissionNormal.sub( vMeshPos, vGlobePos );
+    vMissionNormal.normalize();
+
+    var vCamVec = new THREE.Vector3();
+    var vCamPos = new THREE.Vector3();
+    vCamPos.copy( camera.matrixWorld.getPosition() );
+    vCamVec.sub( vCamPos, vMeshPos );
+    vCamVec.normalize();   
+
+    return vCamVec.dot( vMissionNormal ) < -0.2;
+}
 
 function isOnNightSide( missionObject )
 {
