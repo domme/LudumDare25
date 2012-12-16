@@ -551,7 +551,7 @@ var monsterNameSpace = (function(ns)
                         padding 	: 0,
                         modal       : true
                     });
-
+					soundManager.play('m1');
                     window.setTimeout(function() {
                         $.fancybox.close();
                     }, 1000);
@@ -565,7 +565,7 @@ var monsterNameSpace = (function(ns)
                         padding 	: 0,
                         modal       : true
                     });
-
+                    soundManager.play('m4');
                     window.setTimeout(function() {
                         $.fancybox.close();
                     }, 1000);
