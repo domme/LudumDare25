@@ -71,19 +71,24 @@ var monsterNameSpace = (function(ns)
 		console.log(1);
 		monsterManager = game.player.monsterManager;
 		console.log(objLength(game.player.monsterManager.monsterList));
-		if(game.player.cash - self.items[name].price > 0 && objLength(game.player.monsterManager.monsterList) < 5)
-		{
-			monsterManager = game.player.monsterManager;
-			monsterManager.addMonster(self.items[name]);
-			game.player.cash -= self.items[name].price;
-			$('.shop .item[data-name="'+name+'"]').remove();
-			delete self.items[name];
-			return(true)
-		}
-		else if(game.player.cash - self.items[name].price < 0)
-			this.noCredits();
-		else
-			this.inventarFull();
+        if(game.player.cash - self.items[name].price < 0)
+        {
+            this.noCredits();
+            return false;
+        }
+
+        if(objLength(game.player.monsterManager.monsterList) >= 5)
+        {
+            this.inventarFull();
+            return false;
+        }
+
+        monsterManager = game.player.monsterManager;
+        monsterManager.addMonster(self.items[name]);
+        game.player.cash -= self.items[name].price;
+        $('.shop .item[data-name="'+name+'"]').remove();
+        delete self.items[name];
+        return(true);
 
 		function objLength(obj) {
 		    var size = 0, key;
