@@ -293,13 +293,14 @@ var monsterNameSpace = (function(ns)
 			if(objLength(game.player.monsterManager.monsterList) > 1)
 			{
 				var content 	= '<div class="dialogue">'
-								+ 'One of your monsters Monster ('+game.player.monsterManager.monsterList[id].name+') signed off.'
+								+ 'One of your monsters Monster ('+game.player.monsterManager.monsterList[id].name+') quitted.<br />'
+								+ 'The kids were too cruel to him'
 								+ '</div>'
 			}
 			else
 			{
 				var content 	= '<div class="dialogue">'
-								+ 'Your last Monster signed off. But don\'t panic! You can easily afford a new one.'
+								+ 'Your last Monster quitted. But don\'t panic! You can easily afford a new one.'
 								+ '<div class="buttons"><input type="button" value="Get me a fresh monster!" onclick="monsterNameSpace.shop.renderDialog();" /></div>'
 								+ '</div>'
 			}
@@ -313,7 +314,7 @@ var monsterNameSpace = (function(ns)
 		else
 		{
 			var content 	= '<div class="dialogue">'
-							+ 'Your last Monster signed off and you ran out of scare-credits. <br />So basically... YOU ARE FIRED!'
+							+ 'Your last Monster quitted and you ran out of scare-credits. <br />So basically... YOU ARE FIRED!'
 							+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'index.htm\'" /></div>'
 							+ '</div>'
 
@@ -344,7 +345,7 @@ var monsterNameSpace = (function(ns)
 		if(objLength(game.player.monsterManager.monsterList) > list.length)
 		{
 			var content 	= '<div class="dialogue">'
-							+ list.length+' of your Monsters signed off because you couldn\'t pay. You better go to work.'
+							+ list.length+' of your Monsters quitted because you couldn\'t pay. You better go to work.'
 							+ '</div>'
 
 			$.fancybox({
@@ -356,7 +357,7 @@ var monsterNameSpace = (function(ns)
 		else
 		{
 			var content 	= '<div class="dialogue">'
-							+ 'All your monsters signed off and you ran out of scare-credits. <br />So basically... YOU ARE FIRED!'
+							+ 'All your monsters quitted and you ran out of scare-credits. <br />So basically... YOU ARE FIRED!'
 							+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'index.htm\'" /></div>'
 							+ '</div>'
 
