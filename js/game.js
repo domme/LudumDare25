@@ -313,7 +313,7 @@ var monsterNameSpace = (function(ns)
     ns.Mission.prototype.makeDroppable = function()
     {
         var mis = this;
-        $(".missionWindow").droppable({
+        $(this.div).droppable({
             drop	: function(e, ui) {
 
                 // START calculate timeout of monster, XP to gain and scare-credits player will get
