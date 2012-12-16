@@ -315,7 +315,7 @@ var monsterNameSpace = (function(ns)
 		{
 			var content 	= '<div class="dialogue">'
 							+ 'Your last Monster quitted and you ran out of scare-credits. <br />So basically... YOU ARE FIRED!'
-							+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'index.htm\'" /></div>'
+							+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'index.html\'" /></div>'
 							+ '</div>'
 
 			$.fancybox({
@@ -358,7 +358,7 @@ var monsterNameSpace = (function(ns)
 		{
 			var content 	= '<div class="dialogue">'
 							+ 'All your monsters quitted and you ran out of scare-credits. <br />So basically... YOU ARE FIRED!'
-							+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'index.htm\'" /></div>'
+							+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'index.html\'" /></div>'
 							+ '</div>'
 
 			$.fancybox({
