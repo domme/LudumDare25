@@ -195,6 +195,7 @@ var monsterNameSpace = (function(ns)
         mis.location.phi = phi;
         mis.location.theta = theta;
 
+
         this.missionList.push(mis);
     };
 
@@ -586,16 +587,16 @@ function isOnLand( phi, theta )
 	return pixelValue < 230;
 }
 
-function createRandomChildMissionGraphics(phi, theta, cb)
+function createRandomChildMissionGraphics( phi, theta )
 {
 	var newMissionMesh = new THREE.Mesh( new THREE.SphereGeometry( 2, 10, 10 ), new THREE.MeshBasicMaterial( { color: 0x0000ff } ) );
 	newMissionMesh.position.x = globeRadius * Math.sin( theta ) * Math.cos( phi );
 	newMissionMesh.position.y = globeRadius * Math.sin( theta ) * Math.sin( phi );
 	newMissionMesh.position.z = globeRadius * Math.cos( theta );
-    newMissionMesh.cb = cb;
 
 	missionMeshes.push( newMissionMesh );
 	globeMesh.add( newMissionMesh );
+
 }
 
 
@@ -626,6 +627,37 @@ function update()
 {
 	globeMesh.rotation.y += 0.001;
 	cameraControls.update();
+
+ 
+}
+
+function getProjectedScreenPos( mesh )
+{
+    var modelWorld = mesh.matrixWorld;
+    var view = camera.matrixWorldInverse;
+    var proj = camera.projectionMatrix;
+
+    var worldViewProj = new THREE.Matrix4();
+    worldViewProj.multiply( proj, view );
+    worldViewProj.multiply( worldViewProj, modelWorld );
+
+
+    var pos = new THREE.Vector4( mesh.position.x, mesh.position.y, mesh.position.z, 1.0 );
+    pos = worldViewProj.multiplyVector4( pos );
+
+    pos.x = pos.x / pos.w;
+    pos.y = pos.y / pos.w;
+    pos.z = pos.z / pos.w;
+
+    //ClipSpace -> NDC
+    pos.x = ( pos.x + 1.0 ) / 2.0;
+    pos.y = ( pos.y + 1.0 ) / 2.0;
+
+    var x = pos.x * SCREEN_WIDTH;
+    var y = pos.y * SCREEN_HEIGHT;
+
+    console.log( x );
+    console.log( y );
 }
 
 function intersectWithMouse( event )
@@ -681,6 +713,10 @@ function onMouseMove( event )
 {
 	var pickedMesh = intersectWithMouse( event );
 
+    if( pickedMesh != null )
+        getProjectedScreenPos( pickedMesh );
+    /*
+
 	if( pickedMesh != null )
 	{
 		console.log( "Hit!" );
@@ -700,7 +736,7 @@ function onMouseMove( event )
         mesh.wasActive = 0;
         mesh.material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
         mesh.dirty = true;
-    }
+    } */
 		
 }
 
