@@ -11,7 +11,6 @@ var globeCloudMaterial;
 var globeCityMaterial;
 var renderer;
 var sunPointlight;
-var sunPointlightCloud;
 
 
 var waterLandImageAdapter = function()
@@ -654,8 +653,6 @@ function update()
 	globeMesh.rotation.y += 0.001;
 	cameraControls.update();
 
-
-
     if( game !== undefined && game.missionManager !== undefined )
     {
         var missionList = game.missionManager.missionList;
@@ -678,10 +675,10 @@ function updateMissionDivPosition( mission )
 
     var worldViewProj = new THREE.Matrix4();
     worldViewProj.multiply( proj, view );
-    worldViewProj.multiply( worldViewProj, globeMesh.matrixWorld );
+    worldViewProj.multiply( worldViewProj, modelWorld );
 
 
-    var pos = new THREE.Vector4( mission.mesh.position.x, mission.mesh.position.y, mission.mesh.position.z, 1.0 );
+    var pos = new THREE.Vector4( 0.0, 0.0, 0.0, 1.0 );
     pos = worldViewProj.multiplyVector4( pos );
 
     pos.x = pos.x / pos.w;
@@ -694,10 +691,6 @@ function updateMissionDivPosition( mission )
 
     var x = pos.x * SCREEN_WIDTH;
     var y = pos.y * SCREEN_HEIGHT;
-
-    console.log( x );
-    console.log( y );
-    console.log( " " );
 
     return new THREE.Vector2( x, y );
 }
@@ -750,6 +743,31 @@ function intersectWithMouse( event )
 	}
 
 	return null;
+}
+
+
+function isOnNightSide( missionObject )
+{
+    var mesh = missionObject.mesh;
+
+
+    var vMeshPos = new THREE.Vector3();
+    vMeshPos.copy( mesh.matrixWorld.getPosition() );
+
+    var vGlobePos = new THREE.Vector3();
+    vGlobePos.copy( globeMesh.matrixWorld.getPosition() );
+
+    var vMissionNormal = new THREE.Vector3();
+    vMissionNormal.sub( vMeshPos, vGlobePos );
+    vMissionNormal.normalize();
+
+    var vLightVec = new THREE.Vector3();
+    var vLightPos = new THREE.Vector3();
+    vLightPos.copy( sunPointlight.matrixWorld.getPosition() );
+    vLightVec.sub( vLightPos, vMeshPos );
+    vLightVec.normalize();
+
+    return vLightVec.dot( vMissionNormal ) < 0.0;
 }
 
 
