@@ -40,6 +40,12 @@ var monsterNameSpace = (function(ns)
 	};
 
 
+    ns.random = function(min, max)
+    {
+        return Math.round(Math.random() * (max - min)+ 0.5) + min;
+    };
+
+
     ns.Game = function(title)
     {
         this.title = title;
@@ -58,11 +64,44 @@ var monsterNameSpace = (function(ns)
         this.gui.drawHUD();
 
         this.missionManager = new ns.MissionManager(this.saveGame);
-        this.missionManager.createMission(this.player);
-        this.missionManager.createMission(this.player);
-        this.missionManager.createMission(this.player);
+        this.generateMissions();
 
         ns.shop = new ns.shopManager();
+    };
+
+    ns.Game.prototype.generateMissions = function()
+    {
+        var count = ns.random(5, 15);
+
+        var lvl = 0, countOfMonsters = 0;
+        for(var i in this.player.monsterManager.monsterList)
+        {
+            lvl+= this.player.monsterManager.monsterList[i];
+            ++count;
+        }
+
+        var avgLvl = Math.round(lvl/count);
+
+        var p35 = Math.round(count/100*35),
+            p15 = Math.round(count/100*15);
+
+        for(var i = 0; i < p35;++i)
+        {
+            this.missionManager.createMission(this.player, ns.random(0, 2));
+        }
+        for(var i = 0; i < p35;++i)
+        {
+            this.missionManager.createMission(this.player, ns.random(-2, 0));
+        }
+
+        for(var i = 0; i < p15;++i)
+        {
+            this.missionManager.createMission(this.player, ns.random(2, 5));
+        }
+        for(var i = 0; i < p15;++i)
+        {
+            this.missionManager.createMission(this.player, ns.random(-5, -2));
+        }
     };
     /*******************************************************************************************************************
      * PLAYER
