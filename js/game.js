@@ -71,12 +71,17 @@ var monsterNameSpace = (function(ns)
 
     ns.Game.prototype.generateMissions = function()
     {
-        var count = ns.random(5, 15);
+        for(var i in this.missionManager.missionList)
+        {
+            this.missionManager.deleteMission(this.missionManager.missionList[i]);
+        }
+
+        var count = ns.random(5, 10);
 
         var lvl = 0, countOfMonsters = 0;
         for(var i in this.player.monsterManager.monsterList)
         {
-            lvl+= this.player.monsterManager.monsterList[i];
+            lvl+= this.player.monsterManager.monsterList[i].level;
             ++count;
         }
 
@@ -87,20 +92,20 @@ var monsterNameSpace = (function(ns)
 
         for(var i = 0; i < p35;++i)
         {
-            this.missionManager.createMission(this.player, ns.random(0, 2));
+            this.missionManager.createMission(this.player, avgLvl+ns.random(0, 3));
         }
         for(var i = 0; i < p35;++i)
         {
-            this.missionManager.createMission(this.player, ns.random(-2, 0));
+            this.missionManager.createMission(this.player, avgLvl+ns.random(0, 3));
         }
 
         for(var i = 0; i < p15;++i)
         {
-            this.missionManager.createMission(this.player, ns.random(2, 5));
+            this.missionManager.createMission(this.player, avgLvl+ns.random(2, 5));
         }
         for(var i = 0; i < p15;++i)
         {
-            this.missionManager.createMission(this.player, ns.random(-5, -2));
+            this.missionManager.createMission(this.player, avgLvl-ns.random(0, 5));
         }
     };
     /*******************************************************************************************************************
@@ -312,7 +317,7 @@ var monsterNameSpace = (function(ns)
 		}
 
 		game.player.monsterManager.removeMonster(id);
-	}
+	};
 
     /*******************************************************************************************************************
      * MISSION MANAGER
@@ -323,7 +328,7 @@ var monsterNameSpace = (function(ns)
         this.saveGame = saveGameHandler;
     };
 
-    ns.MissionManager.prototype.createMission = function(player)
+    ns.MissionManager.prototype.createMission = function(player, age)
     {
         var mis = new ns.Mission(player);
 
@@ -333,7 +338,7 @@ var monsterNameSpace = (function(ns)
 		mis.mesh = createRandomChildMissionGraphics(phi, theta);
         mis.location.phi = phi;
         mis.location.theta = theta;
-
+        mis.children.age = Math.min(10, Math.max(1, age));
 
         this.missionList.push(mis);
     };
@@ -352,6 +357,7 @@ var monsterNameSpace = (function(ns)
         if(foundKey==-1) return;
         this.missionList.splice(foundKey,1);
         globeMesh.remove( mission.mesh );
+        $(mission.div).remove();
     };
 
     /*******************************************************************************************************************
@@ -362,8 +368,7 @@ var monsterNameSpace = (function(ns)
         this.player = player;
 
 
-        this.children = {name:'Domi Lazarek', gender: 0, random: ns.Monster.TYPES.getRandom()};
-        this.children.age = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
+        this.children = {name:'Domi Lazarek', gender: 0, random: ns.Monster.TYPES.getRandom(), age: 1};
         this.location = {phi:0,theta:0};
 
         this.div = null;
@@ -415,7 +420,7 @@ var monsterNameSpace = (function(ns)
         }
 
         this.div.style.display = "none";
-    }
+    };
 
     ns.Mission.prototype.makeDroppable = function()
     {
@@ -473,7 +478,6 @@ var monsterNameSpace = (function(ns)
                    game.player.monsterManager.monsterDie(monster_id);
                 }
 
-                $(this).remove();
                 game.missionManager.deleteMission(mis);
                 // END calculate timeout of monster, XP to gain and scare-credits player will get
             }
@@ -773,12 +777,18 @@ function setTime( hour )
 
 function updateTime()
 {
-    var t = currentHour + timeSpeed * deltaTime;
+    var lastHour = Math.floor(currentHour),
+        t = currentHour + timeSpeed * deltaTime;
+
     setTime( t%24 );
+
+    if(lastHour == Math.floor(currentHour)) return;
 
     if(Math.floor(currentHour)==0)
     {
         game.player.payDailyFee();
+    } else if(Math.floor(currentHour)==12) {
+        game.generateMissions();
     }
 }
 
