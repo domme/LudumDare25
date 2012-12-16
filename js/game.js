@@ -16,7 +16,7 @@ var centerCubeMesh;
 var deltaTime;
 var currentHour = 1.0;
 var daysPlayed = 0;
-var updateShopFrequency = 5;
+var updateShopFrequency = 2;
 
 
 var waterLandImageAdapter = function()
