@@ -12,7 +12,6 @@ var globeCityMaterial;
 var renderer;
 var sunPointlight;
 var sunPointlightCloud;
-var missionMeshes = [];
 
 
 var waterLandImageAdapter = function()
@@ -191,7 +190,7 @@ var monsterNameSpace = (function(ns)
         var phi = Math.random() * 2 * Math.PI;
         var theta = Math.random() * Math.PI;
 
-		createRandomChildMissionGraphics(phi, theta, (function(obj, method) { return function() {method.apply(obj, arguments)}; })(mis,mis.draw));
+		mis.mesh = createRandomChildMissionGraphics(phi, theta, (function(obj, method) { return function() {method.apply(obj, arguments)}; })(mis,mis.draw));
         mis.location.phi = phi;
         mis.location.theta = theta;
 
@@ -212,7 +211,7 @@ var monsterNameSpace = (function(ns)
 
         if(foundKey==-1) return;
         this.missionList.splice(foundKey,1);
-        globeMesh.remove(missionMeshes.splice(foundKey,1)[0]);
+        globeMesh.remove( this.missionList[ foundKey ].mesh );
     };
 
     /*******************************************************************************************************************
@@ -550,13 +549,13 @@ function init()
 	//Init star-system
 	var numStars = 10000;
 	var maxStarDistance = 500;
-	var minEarthDistance = 200;
+	var minEarthDistance = 300;
 
 	var starGeometry = new THREE.Geometry();
 
 	for( var i = 0; i < numStars; ++i )
 	{
-		var radius = Math.random() * 0.5 + 0.1; 
+		var radius = Math.random() * 1.0 + 0.1; 
 
 		var currMesh = new THREE.Mesh( new THREE.SphereGeometry( radius, 1, 1 ) );
 
@@ -564,7 +563,13 @@ function init()
 		currMesh.position.y = ( Math.random() * 2 - 1 ) * maxStarDistance;
 		currMesh.position.z = ( Math.random() * 2 - 1 ) * maxStarDistance;
 
-		THREE.GeometryUtils.merge( starGeometry, currMesh );
+        var meshEarth = new THREE.Vector3();
+        meshEarth.x = globeMesh.position.x - currMesh.position.x;
+        meshEarth.y = globeMesh.position.y - currMesh.position.y;
+        meshEarth.z = globeMesh.position.z - currMesh.position.z;
+
+        if( meshEarth.length() >= minEarthDistance )
+		  THREE.GeometryUtils.merge( starGeometry, currMesh );
 	}
 
 	var starMesh = new THREE.Mesh( starGeometry, new THREE.MeshBasicMaterial( { color: 0xffffff } ) );
@@ -607,10 +612,9 @@ function createRandomChildMissionGraphics( phi, theta )
 	newMissionMesh.position.x = globeRadius * Math.sin( theta ) * Math.cos( phi );
 	newMissionMesh.position.y = globeRadius * Math.sin( theta ) * Math.sin( phi );
 	newMissionMesh.position.z = globeRadius * Math.cos( theta );
-
-	missionMeshes.push( newMissionMesh );
 	globeMesh.add( newMissionMesh );
 
+    return newMissionMesh;
 }
 
 
@@ -645,9 +649,9 @@ function update()
  
 }
 
-function getProjectedScreenPos( mesh )
+function updateMissionDivPosition( mission )
 {
-    var modelWorld = mesh.matrixWorld;
+    var modelWorld = mission.mesh.matrixWorld;
     var view = camera.matrixWorldInverse;
     var proj = camera.projectionMatrix;
 
@@ -656,7 +660,7 @@ function getProjectedScreenPos( mesh )
     worldViewProj.multiply( worldViewProj, modelWorld );
 
 
-    var pos = new THREE.Vector4( mesh.position.x, mesh.position.y, mesh.position.z, 1.0 );
+    var pos = new THREE.Vector4( mission.mesh.position.x, mission.mesh.position.y, mission.mesh.position.z, 1.0 );
     pos = worldViewProj.multiplyVector4( pos );
 
     pos.x = pos.x / pos.w;
@@ -672,6 +676,9 @@ function getProjectedScreenPos( mesh )
 
     console.log( x );
     console.log( y );
+
+    mission.div.position.x = x;
+    mission.div.position.y = y;
 }
 
 function intersectWithMouse( event )
@@ -710,12 +717,14 @@ function intersectWithMouse( event )
 	mouseRay.direction.z = rayNear.z - camera.position.z;
 	mouseRay.direction.normalize();
 
-	for( var i = 0; i < missionMeshes.length; ++i )
+    var missionList = game.missionManager.missionList;
+
+	for( var i = 0; i < missionList.length; ++i )
 	{
-		var intersections = mouseRay.intersectObject( missionMeshes[ i ], false );
+		var intersections = mouseRay.intersectObject( missionList[ i ].mesh, false );
 
 		if( intersections[ 0 ] != null )
-			return intersections[ 0 ].object;
+			return missionList[ i ];
 
 	}
 
@@ -725,10 +734,15 @@ function intersectWithMouse( event )
 
 function onMouseMove( event )
 {
-	var pickedMesh = intersectWithMouse( event );
+	var pickedMission = intersectWithMouse( event );
 
-    if( pickedMesh != null )
-        getProjectedScreenPos( pickedMesh );
+    if( pickedMission != null )
+    {
+       updateMissionDivPosition( pickedMission );
+       pickedMission.draw(); 
+    }
+       
+
     /*
 
 	if( pickedMesh != null )
