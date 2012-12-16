@@ -21,7 +21,7 @@ var soundManager = function()
 			this.play();
 		}, false);
 		snd[key].volume = 0.2;
-		// snd[key].play();	// this line starts the loop...		
+		snd[key].play();	// this line starts the loop...		
 	}
 
 }
