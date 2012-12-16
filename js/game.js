@@ -285,11 +285,10 @@ var monsterNameSpace = (function(ns)
 		    }
 		    return size;
 		}
-
 		// remove monster from sidebar
 		$('#sidebar #'+id).remove();
 
-		if(objLength(game.player.monsterManager.monsterList) > 1 || game.player.cash >= 6000)
+		if(objLength(game.player.monsterManager.monsterList) > 1 || game.player.cash >= 7000)
 		{
 			if(objLength(game.player.monsterManager.monsterList) > 1)
 			{
@@ -604,9 +603,8 @@ var monsterNameSpace = (function(ns)
                     });
                     soundManager.play('m4');
                     window.setTimeout(function() {
-                        $.fancybox.close();
+                        game.player.monsterManager.monsterDie(monster_id);
                     }, 1000);
-                    game.player.monsterManager.removeMonster(monster_id);
                 }
 
                 game.missionManager.deleteMission(mis);
