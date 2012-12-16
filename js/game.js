@@ -77,7 +77,7 @@ var monsterNameSpace = (function(ns)
             this.missionManager.deleteMission(this.missionManager.missionList[i]);
         }
 
-        var count = ns.random(5, 10);
+        var count = ns.random(5, 10)-this.missionManager.missionList.length;
 
         var lvl = 0, countOfMonsters = 0;
         for(var i in this.player.monsterManager.monsterList)
@@ -338,7 +338,7 @@ var monsterNameSpace = (function(ns)
 		        if (obj.hasOwnProperty(key)) size++;
 		    }
 		    return size;
-		};
+		}
 
 		console.log(objLength(game.player.monsterManager.monsterList));
 
@@ -515,7 +515,8 @@ var monsterNameSpace = (function(ns)
                 if( isOnNightSide( mis ) )
                  	monster_level += 1;
 
-                var chance = 45 + (monster_level - toscare_level) * 20;
+                var diff = monster_level - toscare_level;
+                var chance = 45 + diff>0?diff*25:$diff*15;
                 if(Math.round(1+Math.random()*100) < chance)
                 {
                     var cashFlow = Math.max(1, (toscare_level - monster.level)) * 500;
@@ -856,7 +857,6 @@ function updateTime()
             monsterNameSpace.shop.generateNewItems();
 
         game.player.payDailyFee();
-    } else if(Math.floor(currentHour)==12) {
         game.generateMissions();
     }
 }
