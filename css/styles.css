@@ -13,18 +13,52 @@ body
 	line-height	: 16px;
 	color		: #DDD;
 	background	: #000;
-	overflow	: hidden;
 }
 
-
-img#logo
+a
 {
-	position	: absolute;
-	left		: 50%;
-	margin-left	: -319px;
-	top			: 140px;
+	color 	: #749cae;
 }
 
+a:Hover
+{
+	color 	: #326277;
+}
+
+#main
+{
+	width	: 960px;
+	margin 	: 0px auto;
+	padding-bottom 	: 20px;
+}
+
+
+#main #logo
+{
+	margin-top 	: 20px;
+	text-align 	: center;
+}
+
+
+/**
+ *	Footer
+ */
+
+#footer
+{
+	position 	: fixed;
+	bottom 		: 0px;
+	left 		: 0px;
+	width 		: 100%;
+	text-align 	: center;
+	padding 	: 10px;
+	background 	: #222;
+}
+
+#footer a
+{
+	margin-right 	: 5px;
+}
 
 /**
  *	Loginform
@@ -35,25 +69,23 @@ img#logo
 	width 		: 500px;
 	background 	: rgba(255, 255, 255, 0.15);
 	padding 	: 20px;
-	position 	: absolute;
-	left 		: 50%;
-	top 		: 50%;
-	margin-left : -270px;
-	margin-top 	: -23px;
+	margin 		: 0px auto;
+	margin-top 	: 70px;
 	text-align	: center;
 	border-top 	: 4px solid #666;
 }
 
-input
+#loginform input
 {
 	font-size 				: 18px;
 	padding 				: 3px;
 	border-radius			: 3px;
 	-webkit-border-radius	: 3px;
 	border 					: 1px solid #AAA;
+	text-align 				: center;
 }
 
-input.btn
+#loginform input.btn
 {
 	padding 				: 5px;
 	border-radius			: 3px;
@@ -69,6 +101,57 @@ input.btn
 	filter					: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=0 );
 	font-size 				: 13px;
 	vertical-align			: top;
+}
+
+#loginform .monster_container
+{
+	position	: relative;
+	width		: 140px;
+	height		: 140px;
+	display		: inline-block;
+	margin 		: 4px;
+	cursor 		: pointer;
+}
+
+#loginform .monster_container .name
+{
+	padding: 5px;
+	background: rgba(0, 0, 0, 0.4);
+	font-size: 15px;
+	line-height: 15px;
+	font-weight: bold;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 130px;
+	text-shadow		: 0px 0px 4px #000;
+    filter			: dropshadow(color=#000, offx=0, offy=0);	
+}
+
+#loginform img
+{
+}	
+
+/**
+ *	help box
+ */
+
+#help
+{
+	width 		: 500px;
+	background 	: rgba(255, 255, 255, 0.15);
+	padding 	: 20px;
+	margin 		: 0px auto;
+	margin-top 	: 10px;
+	text-align	: center;
+	border-top 	: 4px solid #666;
+}
+
+#help p
+{
+	font-size	: 14px;
+	line-height	: 24px;
+	text-align	: left;
 }
 
 

@@ -4,16 +4,32 @@
 
 		<meta charset="utf-8">
 
-		<title>Fear is our business</title>
+		<title>Scarefactory - Fear is our business</title>
+
+        <script src="js/objectWatch.js" type="text/javascript"></script>
+
+		<!-- jQuery -->
+		<script src="js/jquery.min.js" type="text/javascript"></script>
+		<script src="js/jqueryui.min.js" type="text/javascript"></script>
+
+		<!-- fancybox -->
+		<script src="js/fancybox.min.js" type="text/javascript"></script>
+		<link href="css/fancybox.css" rel="stylesheet">
+
+		<!-- three JS -->
+		<script src="js/three.js" type="text/javascript"></script>
 
 
 		<!-- own JS -->
-		<script src="js/jquery.min.js" type="text/javascript"></script>
-		<script src="js/three.js" type="text/javascript"></script>
-		<script src="js/OrbitControls.js" type="text/javascript"></script>
+		<script src="js/soundManager.js" type="text/javascript"></script>
 		<script src="js/monsterShader.js" type="text/javascript"></script>
-		<script src="js/monsterScare.js" type="text/javascript"></script>
-
+		<script src="js/OrbitControls.js" type="text/javascript"></script>
+		<script src="js/SaveGameHandler.js" type="text/javascript"></script>
+		<script src="js/monster.js" type="text/javascript"></script>
+		<script src="js/mission.js" type="text/javascript"></script>
+		<script src="js/missionmanager.js" type="text/javascript"></script>
+		<script src="js/shop.js" type="text/javascript"></script>
+		<script src="js/game.js" type="text/javascript"></script>
 
 		<!-- own CSS -->
 		<link href="css/styles.css" rel="stylesheet">
@@ -21,9 +37,81 @@
 	</head>
 
 	<body>
+		<div id="main">
+			<div id="logo">
+				<img src="assets/logo.png" />
+			</div>
+
+			<div id="loginform">
+				<h2 style="margin-top: 0px; line-height: 25px;">Set your monster corporation title and <br />choose the first monster to go with!</h2>
+				<div>
+					<input type="text" name="nickname" id="nickname" placeholder="My Monster Factory" />
+				</div>
+
+				<div style="margin-top: 10px;">
+
+					<div class="monster_container" onclick="startGame(1)">
+						<img src="assets/textures/monster/doggy.jpg" />
+						<div class="name">Sauh</div>
+					</div>
+					<div class="monster_container" onclick="startGame(2)">
+						<img src="assets/textures/monster/slime.jpg" />
+						<div class="name">Quah</div>
+					</div>
+					<div class="monster_container" onclick="startGame(3)">
+						<img src="assets/textures/monster/spider.jpg" />
+						<div class="name">Drash</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div id="help">
+				<h2 style="margin-top: 0px; line-height: 25px;">Your Mission</h2>
+				<p>
+					Children are evil! They are dirty, loud and full of shit. So we - the Scarefactory - hired the
+					most horrifying monsters you can get for money.<br />
+					Your mission is to scare the shit out of these little brats. But be careful! TV and videogames
+					dulled the youth and made it really difficult for our company to server extra quality scares.<br />
+					<br />
+					For each successful near-to-death scared child you will get a reward called "Scare Credits".
+					Monsters are a bit whiny these days. So it may appear that they will quit the job if childs are not
+					scared enough.<br />
+					But enough blabla. Let's get serious. <strong>How does your scare-center work</strong>?
+				</p>
+			</div>
 
 			
-			
+			<div id="footer">
+				Made by 
+				<a href="">Dominik Lazarek</a>
+				<a href="">Shane Grüling</a>
+				<a href="">Carsten Ruhr</a>
+				for Ludum Dare #25
+			</div>
+
+		</div>
 	</body>
+
+	<script>
+
+		function startGame(i)
+		{
+			var name = 'Sauh';
+
+			switch(i){
+				case '2': name = 'Quah'; break;
+				case '3': name = 'Drash'; break;
+			}
+			
+			var monsters = new Array(new monsterNameSpace.Monster({name: name, type: i}));
+
+			localStorage.setItem('monsters', JSON.stringify(monsters));
+			localStorage.setItem('companyName', $('#nickname').val());
+
+			window.location.href = "game.htm";
+		}
+
+	</script>
 
 </html>

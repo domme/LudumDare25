@@ -484,11 +484,7 @@ var monsterNameSpace = (function(ns)
 })(monsterNameSpace);
 
 var game = null;
-$(document).ready(function(){
-	game = new monsterNameSpace.Game('Scare Factory');
-    game.start();
-    $('#sidebar #monsters').height($(window).height()-120);
-});
+
 
 
 // monster dies because it didn't manage to scare a fucking child...

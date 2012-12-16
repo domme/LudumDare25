@@ -19,84 +19,12 @@
 	</head>
 
 	<body>
-
+		<div class="main">
 			<img src="assets/logo.png" id="logo" />
 
 
-			<div id="loginform">
-				
-				<h2 style="margin-top: 0px; line-height: 25px;">Set your monster corporation title and <br />choose the first monster to go with!</h2>
-
-				<div>
-					<input type="text" name="nickname" id="nickname" />
-				</div>
-
-				<div style="margin-top: 10px;">
-					<input type="button" class="btn" value="Monster 1" onclick="startGame(1)" />
-					<input type="button" class="btn" value="Monster 2" onclick="startGame(2)" />
-					<input type="button" class="btn" value="Monster 3" onclick="startGame(3)" />
-				</div>
-
-			</div>
-
-
-			<script>
-
-				// start game automatically
-				if(localStorage.getItem('monster_corp') && localStorage.getItem('monsters') && localStorage.getItem('monsters')[0])
-				{
-					// window.location.href = 'game.htm';
-				}
-
-				// start the game
-				function startGame(start_monster)
-				{
-					monsters = {};
-
-					if(start_monster == 1)
-						monsters['_'+Math.random().toString(36).substr(2, 9)] = {
-							name		: 'mmmone',
-							type		: 1,
-							xp 			: 0,
-							level 		: 1,
-							daily_fee	: 1000
-						};
-
-					if(start_monster == 2)
-						monsters['_'+Math.random().toString(36).substr(2, 9)] = {
-							name		: 'aaaatwo',
-							type		: 2,
-							xp 			: 0,
-							level 		: 3,
-							daily_fee	: 1000
-						};
-
-					if(start_monster == 3)
-						monsters['_'+Math.random().toString(36).substr(2, 9)] = {
-							name		: 'chuuuthree',
-							type		: 3,
-							xp 			: 0,
-							level 		: 3,
-							daily_fee	: 1000
-						};
-
-					monsters['_'+Math.random().toString(36).substr(2, 9)] = {
-							name		: 'bääärgh',
-							type		: 1,
-							xp 			: 0,
-							level 		: 3,
-							daily_fee	: 9100
-						};
-
-					localStorage.setItem('monsters', JSON.stringify(monsters));
-					localStorage.setItem('monster_corp', $('#nickname').val());
-					localStorage.setItem('cash', 10000);
-					window.location.href = 'game.htm';
-				}
-
-			</script>
-
-
+			
+		</div>
 	</body>
 
 </html>
