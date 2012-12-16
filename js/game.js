@@ -544,7 +544,7 @@ var monsterNameSpace = (function(ns)
                 console.log(chance);
                 if(Math.round(1+Math.random()*100) < chance)
                 {
-                    var cashFlow = Math.max(1, (toscare_level - monster.level)) * 500;
+                    var cashFlow = Math.max(1, (toscare_level - monster.level)) * 1000;
                     if(monster.type == toscare_type)
                         cashFlow *= 2;
 
