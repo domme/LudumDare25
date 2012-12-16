@@ -11,7 +11,7 @@ var globeCloudMaterial;
 var globeCityMaterial;
 var renderer;
 var sunPointlight;
-var timeSpeed = 10.0;
+var timeSpeed = 2.0;
 var centerCubeMesh;
 var deltaTime;
 var currentHour = 1.0;
@@ -282,7 +282,7 @@ var monsterNameSpace = (function(ns)
 		        if (obj.hasOwnProperty(key)) size++;
 		    }
 		    return size;
-		};
+		}
 
 		// remove monster from sidebar
 		$('#sidebar #'+id).remove();
@@ -515,7 +515,7 @@ var monsterNameSpace = (function(ns)
                 var chance = 60 + (monster_level - toscare_level) * 20;
                 if(Math.round(1+Math.random()*100) < chance)
                 {
-                    var cashFlow = Math.abs((monster_level - toscare_level)) * 1000;
+                    var cashFlow = Math.abs((monster_level - toscare_level)) * 100;
                     if(monster.type == toscare_type)
                         cashFlow *= 2;
 
@@ -527,7 +527,7 @@ var monsterNameSpace = (function(ns)
                     ns.Monster.prototype.addXP.call(monster, Math.round(xp));
 
                     // set timout for monster usability
-                    var timeout = toscare_level * 5000;
+                    var timeout = toscare_level * 2000;
 
                     // disable monster and show blinking (timeout)
                     $('.item#'+monster_id).draggable('disable');
