@@ -14,7 +14,7 @@ var monsterNameSpace = (function(ns)
 
 				for(k in self.items)
 				{
-					content += '<div data-name="'+self.items[k].name+'" class="item '+self.items[k].type+'"'
+					content += '<div data-name="'+self.items[k].name+'" class="item" data-type="'+self.items[k].type+'"'
 							 + 'onclick="if(monsterNameSpace.shop.buyItem(\''+self.items[k].name+'\') != true) '
 							 + 'if(monsterNameSpace.shop.buyItem(\''+self.items[k].name+'\') == 5) '
 							 + 'monsterNameSpace.shop.inventarFull();'

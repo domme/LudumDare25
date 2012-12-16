@@ -240,21 +240,21 @@ input.btn
 	display 	: inline-block;
 	margin 		: 5px;
 }
-
-.shop .item.water
+.shop .item[data-type="3"]
 {
-	background 		: rgba(0, 0, 255, 0.6);
+    background 		: rgba(0, 0, 255, 0.6);
 }
 
-.shop .item.fire
+.shop .item[data-type="1"]
 {
-	background 		: rgba(255, 0, 0, 0.6);
+    background 		: rgba(255, 0, 0, 0.6);
 }
 
-.shop .item.earth
+.shop .item[data-type="2"]
 {
-	background 		: rgba(0, 255, 0, 0.6);
+    background 		: rgba(0, 255, 0, 0.6);
 }
+
 
 .shop .item .name
 {
