@@ -27,6 +27,14 @@ soundManager.playAmbiente('a1');
 
 var monsterNameSpace = (function(ns)
 {
+	/*
+	 *	ID-Generator
+	 */
+	ns.id_generator = function () {
+		return ('_'+Math.random().toString(36).substr(2, 9));
+	};
+
+
     ns.Game = function(title)
     {
         this.title = title;
@@ -46,8 +54,8 @@ var monsterNameSpace = (function(ns)
 
         this.missionManager = new ns.MissionManager(this.saveGame);
         this.missionManager.createMission(this.player);
-      //  this.missionManager.createMission(this.player);
-       // this.missionManager.createMission(this.player);
+        this.missionManager.createMission(this.player);
+        this.missionManager.createMission(this.player);
 
         ns.shop = new ns.shopManager();
     };
@@ -82,9 +90,10 @@ var monsterNameSpace = (function(ns)
         var list = $('#sidebar #monsters');
         list.html('');
 
-        for(var i = 0, monster = null; monster = this.player.monsterManager.monsterList[i]; ++i)
+        for(var id in this.player.monsterManager.monsterList)
         {
-            list.append('<div id="'+i+'" class="item" data-type="'+monster.type+'">'
+        	monster = this.player.monsterManager.monsterList[id]
+            list.append('<div id="'+id+'" class="item" data-type="'+monster.type+'">'
                 +'<span class="name">'
                 +monster.name+' ('+monster.level+')'
                 +'</span>'
@@ -110,7 +119,7 @@ var monsterNameSpace = (function(ns)
     {
         // default values
         this.defaults 	= {
-
+        	id 			: ns.id_generator(),
             name		: '',
             type		: '',
             xp 			: 0,
@@ -136,7 +145,7 @@ var monsterNameSpace = (function(ns)
     ns.Monster.TYPES = {
         getRandom: function()
         {
-            return Math.round(1+Math.random()*3)
+            return Math.floor(Math.random() * (3 - 1 + 1)) + 1;
         },
         CAR: 1,
         CLOWN: 2,
@@ -155,24 +164,76 @@ var monsterNameSpace = (function(ns)
         }
         game.gui.drawHUD();
     };
+
     /*******************************************************************************************************************
      * Monster Manager
      ******************************************************************************************************************/
     ns.MonsterManager = function(monsterList)
     {
         this.monsterList = monsterList;
-        for(var i = 0, monster = null; monster = this.monsterList[i]; ++i)
-        {
-            monster.prototype = ns.Monster;
-        }
     };
 
     ns.MonsterManager.prototype.addMonster = function(monster)
     {
-        this.monsterList.push(monster);
+        this.monsterList[monster.id] = monster;
         game.gui.drawHUD();
         return this.monsterList.length-1;
     };
+
+    ns.MonsterManager.prototype.removeMonster = function(id)
+    {
+        delete this.monsterList[id];
+        game.gui.drawHUD();
+        return this.monsterList.length-1;
+    };
+
+	// monster dies because it didn't manage to scare a fucking child...
+	ns.MonsterManager.prototype.monsterDie = function(id)
+	{
+		console.log('lost');
+		// remove monster from sidebar
+		$('#sidebar #'+id).remove();
+
+		if(game.player.monsterManager.monsterList.length > 0 || game.player.cash >= 6000)
+		{
+			if(game.player.monsterManager.monsterList.length > 0)
+			{
+				var content 	= '<div class="dialogue">'
+								+ 'One of your monsters Monster ('+game.player.monsterManager.monsterList[id].name+') signed off.'
+								+ '</div>'
+			}
+			else
+			{
+				var content 	= '<div class="dialogue">'
+								+ 'Your last Monster signed off. But don\'t panic! You can easily afford a new one.'
+								+ '<div class="buttons"><input type="button" value="Get me a fresh monster!" onclick="monsterNameSpace.shop.renderDialog();" /></div>'
+								+ '</div>'
+			}
+
+			$.fancybox({
+				content 	: content,
+				margin 		: 0,
+				padding 	: 0
+			});
+		}
+		else
+		{
+			var content 	= '<div class="dialogue">'
+							+ 'Your last Monster signed off and you ran out of scare-credits. <br />So basically... You lost the game'
+							+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'start.htm\'" /></div>'
+							+ '</div>'
+
+			$.fancybox({
+				content 	: content,
+				margin 		: 0,
+				padding 	: 0,
+				modal 		: true
+			});		
+		}
+
+		game.player.monsterManager.removeMonster(id);
+	}
+
     /*******************************************************************************************************************
      * MISSION MANAGER
      ******************************************************************************************************************/
@@ -189,7 +250,7 @@ var monsterNameSpace = (function(ns)
         var phi = Math.random() * 2 * Math.PI;
         var theta = Math.random() * Math.PI;
 
-		mis.mesh = createRandomChildMissionGraphics(phi, theta, (function(obj, method) { return function() {method.apply(obj, arguments)}; })(mis,mis.draw));
+		mis.mesh = createRandomChildMissionGraphics(phi, theta);
         mis.location.phi = phi;
         mis.location.theta = theta;
 
@@ -210,7 +271,7 @@ var monsterNameSpace = (function(ns)
 
         if(foundKey==-1) return;
         this.missionList.splice(foundKey,1);
-        globeMesh.remove( this.missionList[ foundKey ].mesh );
+        globeMesh.remove( mission.mesh );
     };
 
     /*******************************************************************************************************************
@@ -220,7 +281,9 @@ var monsterNameSpace = (function(ns)
     {
         this.player = player;
 
-        this.children = {name:'Domi Lazarek', age:4, gender: 0, random: ns.Monster.TYPES.getRandom()};
+
+        this.children = {name:'Domi Lazarek', gender: 0, random: ns.Monster.TYPES.getRandom()};
+        this.children.age = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
         this.location = {phi:0,theta:0};
 
         this.div = null;
@@ -243,7 +306,22 @@ var monsterNameSpace = (function(ns)
         this.div.style.top = y+"px";
         this.div.style.left = x+"px";
 
+
+
+        this.missionDetails 		= document.createElement('img');
+        if(this.children.age <= 3)
+        	this.missionDetails.src	= 'assets/textures/Children/ScaredGirl_1.jpg';
+        else if(this.children.age < 7)
+        	this.missionDetails.src	= 'assets/textures/Children/Freaky_Boy.jpg';
+        else if(this.children.age <= 10)
+        	this.missionDetails.src	= 'assets/textures/Children/OldGirl.jpg';
+
         $('body').append(this.div);
+        this.div.appendChild(this.missionDetails);
+        this.div.appendChild(document.createTextNode("Name: "+this.children.name));
+        this.div.appendChild(document.createElement("br"));
+        this.div.appendChild(document.createTextNode("Age: "+this.children.age));
+
 
         this.makeDroppable();
     };
@@ -251,14 +329,14 @@ var monsterNameSpace = (function(ns)
     ns.Mission.prototype.makeDroppable = function()
     {
         var mis = this;
-        $(".missionWindow").droppable({
+        $(this.div).droppable({
             drop	: function(e, ui) {
 
                 // START calculate timeout of monster, XP to gain and scare-credits player will get
                 var monster_id 			= ui.draggable.attr('id');
                 var toscare_level 		= $(this).attr('data-level');
                 var toscare_type 		= $(this).attr('data-type');
-                var monster = game.player.monsterManager.monsterList[monster_id];
+                var monster 			= game.player.monsterManager.monsterList[monster_id];
                 var monster_level 		= monster.level;
 
                 // Monster is same type? Great! Bonus
@@ -284,7 +362,7 @@ var monsterNameSpace = (function(ns)
                     ns.Monster.prototype.addXP.call(monster, Math.round(xp));
 
                     // set timout for monster usability
-                    timeout = toscare_level * 5000;
+                    var timeout = toscare_level * 5000;
 
                     // disable monster and show blinking (timeout)
                     $('.item#'+monster_id).draggable('disable');
@@ -301,7 +379,7 @@ var monsterNameSpace = (function(ns)
                 }
                 else
                 {
-                    //monsterDeath(monster_id);
+                   game.player.monsterManager.monsterDie(monster_id);
                 }
 
                 $(this).remove();
@@ -320,52 +398,6 @@ $(document).ready(function(){
     game.start();
     $('#sidebar #monsters').height($(window).height()-120);
 });
-
-// monster dies because it didn't manage to scare a fucking child...
-function monsterDeath(id)
-{
-	$('.item#'+id).remove();
-
-	if(mymonsters.length > 1 || parseInt(localStorage.getItem('cash')) >= 1000)
-	{
-		if(mymonsters.length > 1)
-		{
-			var content 	= '<div class="dialogue">'
-							+ 'Your Monster "'+mymonsters[id].name+'" deceased.'
-							+ '</div>'
-		}
-		else
-		{
-			var content 	= '<div class="dialogue">'
-							+ 'Your last Monster deceased. But don\'t panic! You can easily afford a new one.'
-							+ '<div class="buttons"><input type="button" value="Get me a fresh monster!" onclick="$.fancybox.close(); openShop();" /></div>'
-							+ '</div>'
-		}
-
-		$.fancybox({
-			content 	: content,
-			margin 		: 0,
-			padding 	: 0
-		});
-	}
-	else
-	{
-		var content 	= '<div class="dialogue">'
-						+ 'Your last Monster deceased and you ran out of scare-credits. <br />So basically... You lost the game'
-						+ '<div class="buttons"><input type="button" value="Okay..." onclick="window.location.href = \'start.htm\'" /></div>'
-						+ '</div>'
-
-		$.fancybox({
-			content 	: content,
-			margin 		: 0,
-			padding 	: 0,
-			modal 		: true
-		});		
-	}
-
-	mymonsters.slice(id);
-	localStorage.setItem('monsters', JSON.stringify(mymonsters));
-}
 
 
 // monster dies because it didn't manage to scare a fucking child...

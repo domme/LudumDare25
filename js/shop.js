@@ -16,10 +16,7 @@ var monsterNameSpace = (function(ns)
 				{
 					content += '<div data-name="'+self.items[k].name+'" class="item" data-type="'+self.items[k].type+'"'
 							 + 'onclick="if(monsterNameSpace.shop.buyItem(\''+self.items[k].name+'\') != true) '
-							 + 'if(monsterNameSpace.shop.buyItem(\''+self.items[k].name+'\') == 5) '
-							 + 'monsterNameSpace.shop.inventarFull();'
-							 + 'else '
-							 + 'monsterNameSpace.shop.noCredits();">'
+							 + 'monsterNameSpace.shop.buyItem(\''+self.items[k].name+'\') ">'
 							 + '<div class="name">'+self.items[k].name+' ('+self.items[k].level+')</div>'
                              + '<div class="price">'+self.items[k].price+' $</div>'
 							 + '</div>'
@@ -71,9 +68,10 @@ var monsterNameSpace = (function(ns)
 
 	ns.shopManager.prototype.buyItem = function(name)
 	{
+		console.log(1);
 		monsterManager = game.player.monsterManager;
-
-		if(game.player.cash - self.items[name].price > 0 && game.player.monsterManager.monsterList.length < 5)
+		console.log(objLength(game.player.monsterManager.monsterList));
+		if(game.player.cash - self.items[name].price > 0 && objLength(game.player.monsterManager.monsterList) < 5)
 		{
 			monsterManager = game.player.monsterManager;
 			monsterManager.addMonster(self.items[name]);
@@ -82,7 +80,18 @@ var monsterNameSpace = (function(ns)
 			delete self.items[name];
 			return(true)
 		}
-		return(game.player.monsterManager.monsterList.length)
+		else if(game.player.cash - self.items[name].price < 0)
+			this.noCredits();
+		else
+			this.inventarFull();
+
+		function objLength(obj) {
+		    var size = 0, key;
+		    for (key in obj) {
+		        if (obj.hasOwnProperty(key)) size++;
+		    }
+		    return size;
+		};
 	}
 
 	ns.shopManager.prototype.generateNewItems = function()
