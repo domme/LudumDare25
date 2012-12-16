@@ -55,8 +55,8 @@ var monsterNameSpace = (function(ns)
 
         this.missionManager = new ns.MissionManager(this.saveGame);
         this.missionManager.createMission(this.player);
-      //  this.missionManager.createMission(this.player);
-       // this.missionManager.createMission(this.player);
+        this.missionManager.createMission(this.player);
+        this.missionManager.createMission(this.player);
 
         ns.shop = new ns.shopManager();
     };
@@ -172,11 +172,6 @@ var monsterNameSpace = (function(ns)
     ns.MonsterManager = function(monsterList)
     {
         this.monsterList = monsterList;
-        for(var id in this.monsterList)
-        {
-        	monster = this.monsterList[id];
-            monster.prototype = ns.Monster;
-        }
     };
 
     ns.MonsterManager.prototype.addMonster = function(monster)
@@ -188,7 +183,7 @@ var monsterNameSpace = (function(ns)
 
     ns.MonsterManager.prototype.removeMonster = function(id)
     {
-        delete this.monsterList[id]
+        delete this.monsterList[id];
         game.gui.drawHUD();
         return this.monsterList.length-1;
     };
@@ -256,7 +251,7 @@ var monsterNameSpace = (function(ns)
         var phi = Math.random() * 2 * Math.PI;
         var theta = Math.random() * Math.PI;
 
-		mis.mesh = createRandomChildMissionGraphics(phi, theta, (function(obj, method) { return function() {method.apply(obj, arguments)}; })(mis,mis.draw));
+		mis.mesh = createRandomChildMissionGraphics(phi, theta);
         mis.location.phi = phi;
         mis.location.theta = theta;
 
@@ -277,7 +272,7 @@ var monsterNameSpace = (function(ns)
 
         if(foundKey==-1) return;
         this.missionList.splice(foundKey,1);
-        globeMesh.remove( this.missionList[ foundKey ].mesh );
+        globeMesh.remove( mission.mesh );
     };
 
     /*******************************************************************************************************************
@@ -714,10 +709,6 @@ function updateMissionDivPosition( mission )
 
     var x = pos.x * SCREEN_WIDTH;
     var y = pos.y * SCREEN_HEIGHT;
-
-    console.log( x );
-    console.log( y );
-    console.log( " " );
 
     return new THREE.Vector2( x, y );
 }
